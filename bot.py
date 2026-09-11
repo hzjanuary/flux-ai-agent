@@ -1,16 +1,41 @@
+"""
+bot.py — FluxClaw Telegram Interface
+==========================================
+The main entry point. Creates the Telethon client, registers event handlers,
+and manages the event loop.
+
+Architecture:
+    Telethon Client (Telegram)
+         ↓ (NewMessage event)
+    handle_message()
+         ↓
+    brain.think(chat_id, text) → [ReAct Loop in brain.py]
+         ↓
+    Send response back via Telegram
+
+Commands:
+    /start  — Welcome message
+    /reset  — Clear all memory for this chat
+    /status — Show memory stats
+    /help   — List available tools
+
+Usage:
+    python bot.py
+"""
+
+import asyncio
 import logging
 import sys
-from typing import Optional
 
-from telegram import Update
-from telegram.constants import ChatAction
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+from telethon import TelegramClient, events
+from telethon.tl.types import User
 
 from brain import brain
 from config import cfg
 from memory import memory_manager
 from tools import registry
 
+# ── Logging Setup ──────────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -20,152 +45,256 @@ logging.basicConfig(
     ],
 )
 logger = logging.getLogger(__name__)
-# Avoid logging full request URLs (which include bot token) from httpx internals.
-logging.getLogger("httpx").setLevel(logging.WARNING)
+
+# ── Telethon Client ────────────────────────────────────────────────────────────
+# The session file (cfg.SESSION_NAME + ".session") is created on first run
+# and reused on subsequent starts to avoid re-authentication.
+client = TelegramClient(
+    cfg.SESSION_NAME,
+    cfg.TELEGRAM_API_ID,
+    cfg.TELEGRAM_API_HASH,
+)
+
+# ── Typing Indicator: Show "typing..." while the AI thinks ────────────────────
+async def send_typing(chat_id: int):
+    """Sends a 'typing' action to show the bot is processing."""
+    try:
+        async with client.action(chat_id, "typing"):
+            await asyncio.sleep(99)  # Will be cancelled when response is ready
+    except asyncio.CancelledError:
+        pass
 
 
-def _is_authorized(update: Update) -> bool:
+# ── Helper: Check if message is from owner (optional security) ────────────────
+
+# Warn once at import time if running in public / unprotected mode
+if cfg.TELEGRAM_OWNER_ID == 0:
+    logger.warning(
+        "[Security] TELEGRAM_OWNER_ID is 0 — bot is running in PUBLIC mode. "
+        "Anyone can interact with it and consume your OpenRouter API quota. "
+        "Set TELEGRAM_OWNER_ID in .env to restrict access to yourself only."
+    )
+
+
+def is_authorized(event) -> bool:
+    """
+    Returns True if TELEGRAM_OWNER_ID is 0 (public bot) or
+    if the message sender matches the configured owner ID.
+    """
     if cfg.TELEGRAM_OWNER_ID == 0:
-        return True
-    user = update.effective_user
-    if not user:
+        return True  # No restriction — respond to everyone
+    if event.sender_id != cfg.TELEGRAM_OWNER_ID:
+        logger.warning(
+            "[Security] Blocked message from unauthorized user ID: %s",
+            event.sender_id,
+        )
         return False
-    return user.id == cfg.TELEGRAM_OWNER_ID
+    return True
 
 
-async def _reply_long(message, text: str):
-    if not text:
-        await message.reply_text("Toi khong nhan duoc noi dung tra loi hop le.")
+# ══════════════════════════════════════════════════════════════════════════════
+# EVENT HANDLERS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@client.on(events.NewMessage(pattern="/start"))
+async def handle_start(event):
+    """Welcome message handler."""
+    if not is_authorized(event):
         return
 
-    max_len = 4090
-    if len(text) <= max_len:
-        await message.reply_text(text)
-        return
+    sender = await event.get_sender()
+    name = sender.first_name if isinstance(sender, User) else "bạn"
 
-    chunks = [text[i:i + max_len] for i in range(0, len(text), max_len)]
-    for i, chunk in enumerate(chunks, start=1):
-        suffix = f"\n\n(Part {i}/{len(chunks)})" if len(chunks) > 1 else ""
-        await message.reply_text(chunk + suffix)
-
-
-async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not _is_authorized(update):
-        return
-
-    user_name = (update.effective_user.first_name if update.effective_user else "ban")
     welcome = (
-        f"Xin chao {user_name}. Toi la {cfg.AGENT_NAME}.\n"
-        f"Toi co {len(registry.list_tools())} tools de ho tro quan tri kho.\n"
-        "Lenh co ban: /help, /status, /reset"
+        f"👋 Xin chào **{name}**! Tôi là **{cfg.AGENT_NAME}** — AI Assistant của bạn.\n\n"
+        f"Hello **{name}**! I'm **{cfg.AGENT_NAME}** — your intelligent AI Assistant.\n\n"
+        f"🧠 **Khả năng / Capabilities:**\n"
+        f"• Trả lời câu hỏi bằng tiếng Việt & tiếng Anh\n"
+        f"• Sử dụng {len(registry.list_tools())} công cụ tích hợp sẵn\n"
+        f"• Ghi nhớ cuộc trò chuyện với Lambda Memory\n\n"
+        f"💡 **Lệnh / Commands:** /help | /status | /reset\n\n"
+        f"Hãy bắt đầu nhắn tin! Just start chatting! 🚀"
     )
-    await update.message.reply_text(welcome)
+    await event.reply(welcome)
 
 
-async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not _is_authorized(update):
+@client.on(events.NewMessage(pattern="/help"))
+async def handle_help(event):
+    """Display available tools and usage information."""
+    if not is_authorized(event):
         return
 
+    tools_manifest = registry.get_tools_manifest()
     help_text = (
-        f"{cfg.AGENT_NAME} - Danh sach tools:\n\n"
-        f"{registry.get_tools_manifest()}\n\n"
-        "Ban co the nhap yeu cau bang ngon ngu tu nhien."
+        f"🛠️ **{cfg.AGENT_NAME} — Danh sách công cụ / Available Tools**\n\n"
+        f"{tools_manifest}\n\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"💬 Bạn không cần gọi tool trực tiếp — chỉ cần mô tả yêu cầu bằng ngôn ngữ tự nhiên!\n"
+        f"You don't need to call tools directly — just describe your request naturally!\n\n"
+        f"📈 Xem hiệu năng realtime: `/status latency`\n\n"
+        f"**Ví dụ / Examples:**\n"
+        f"• \"Máy tính của tôi đang dùng bao nhiêu RAM?\"\n"
+        f"• \"Search for Python async best practices\"\n"
+        f"• \"Tính 2^32 là bao nhiêu?\"\n"
+        f"• \"Lưu note: Cần mua sữa\""
     )
-    await update.message.reply_text(help_text)
+    await event.reply(help_text)
 
 
-async def status_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not _is_authorized(update):
+@client.on(events.NewMessage(pattern="/status"))
+async def handle_status(event):
+    """Show memory statistics for this chat."""
+    if not is_authorized(event):
         return
 
-    chat = update.effective_chat
-    if not chat:
+    chat_id = event.chat_id
+    raw_text = (event.raw_text or "").strip().lower()
+    if "latency" in raw_text:
+        await event.reply(brain.get_latency_report(chat_id))
         return
 
-    raw_args = " ".join(context.args).strip().lower()
-    if "latency" in raw_args:
-        await update.message.reply_text(brain.get_latency_report(chat.id))
-        return
-
-    memory = memory_manager.get(chat.id)
+    memory = memory_manager.get(chat_id)
     stm_count = len(memory.short_term)
     has_core = bool(memory.core_context)
-    preview = memory.core_context[:150] + "..." if len(memory.core_context) > 150 else (memory.core_context or "(empty)")
-
-    text = (
-        f"Memory status chat {chat.id}:\n"
-        f"- STM: {stm_count}/{cfg.SHORT_TERM_LIMIT}\n"
-        f"- Core context: {'active' if has_core else 'empty'}\n"
-        f"- Preview: {preview}\n"
-        f"- Model: {cfg.DEFAULT_MODEL}\n"
-        f"- Tools: {len(registry.list_tools())}"
+    core_preview = (
+        memory.core_context[:150] + "..."
+        if len(memory.core_context) > 150
+        else memory.core_context or "(empty)"
     )
-    await update.message.reply_text(text)
+
+    status = (
+        f"📊 **Memory Status — Chat {chat_id}**\n\n"
+        f"├── 🔵 Short-Term Memory: {stm_count}/{cfg.SHORT_TERM_LIMIT} messages\n"
+        f"├── 🟣 Core Context (Long-Term): {'✅ Active' if has_core else '❌ Empty'}\n"
+        f"└── 📝 Core Preview:\n`{core_preview}`\n\n"
+        f"🤖 Model: `{cfg.DEFAULT_MODEL}`\n"
+        f"🔧 Tools: {len(registry.list_tools())} registered"
+    )
+    await event.reply(status)
 
 
-async def reset_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not _is_authorized(update):
+@client.on(events.NewMessage(pattern="/reset"))
+async def handle_reset(event):
+    """Clear all memory for this chat."""
+    if not is_authorized(event):
         return
 
-    chat = update.effective_chat
-    if not chat:
+    chat_id = event.chat_id
+    memory_manager.clear(chat_id)
+    await event.reply(
+        "🗑️ **Đã xóa toàn bộ bộ nhớ!**\n"
+        "All memory has been cleared! Starting fresh. 🆕"
+    )
+
+
+@client.on(events.NewMessage)
+async def handle_message(event):
+    """
+    Main message handler — processes all non-command messages.
+
+    Flow:
+        1. Ignore bots, commands, and unauthorized users
+        2. Show typing indicator
+        3. Pass message to brain.think() → ReAct loop
+        4. Send response
+        5. Cancel typing indicator
+    """
+    # Skip if it's a command (handled by specific handlers above)
+    if event.text and event.text.startswith("/"):
         return
 
-    memory_manager.clear(chat.id)
-    await update.message.reply_text("Da xoa bo nho cua cuoc hoi thoai nay.")
-
-
-async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not _is_authorized(update):
-        logger.warning("Blocked message from unauthorized user %s", update.effective_user.id if update.effective_user else "unknown")
+    # Skip if sender is a bot or if not authorized
+    sender = await event.get_sender()
+    if isinstance(sender, User) and sender.bot:
+        return
+    if not is_authorized(event):
+        logger.info("[Bot] Ignored message from unauthorized user: %s", event.sender_id)
         return
 
-    if not update.message or not update.message.text:
+    # Skip empty messages or media-only messages
+    if not event.text or not event.text.strip():
         return
 
-    chat = update.effective_chat
-    if not chat:
-        return
+    chat_id = event.chat_id
+    user_text = event.text.strip()
 
-    user_text = update.message.text.strip()
-    if not user_text:
-        return
+    logger.info(
+        "[Bot] Message from chat %d: %s",
+        chat_id, user_text[:100]
+    )
+
+    # Start 'typing' indicator in background
+    typing_task = asyncio.create_task(send_typing(chat_id))
 
     try:
-        await context.bot.send_chat_action(chat_id=chat.id, action=ChatAction.TYPING)
-        response = await brain.think(chat.id, user_text)
-        await _reply_long(update.message, response)
-    except Exception as ex:
-        logger.exception("Unhandled error while processing Telegram message.")
-        await update.message.reply_text(f"Loi khong mong muon: {type(ex).__name__}")
+        # 🧠 Core processing — the magic happens here
+        response = await brain.think(chat_id, user_text)
+
+        # Telegram message limit is 4096 chars; split if necessary
+        if len(response) > 4090:
+            chunks = [response[i:i+4090] for i in range(0, len(response), 4090)]
+            for i, chunk in enumerate(chunks):
+                suffix = f"\n\n_(Part {i+1}/{len(chunks)})_" if len(chunks) > 1 else ""
+                await event.reply(chunk + suffix)
+        else:
+            await event.reply(response)
+
+    except Exception as e:
+        logger.exception("[Bot] Unhandled error processing message from chat %d.", chat_id)
+        await event.reply(
+            f"❌ Đã xảy ra lỗi không mong muốn: `{type(e).__name__}`\n"
+            f"An unexpected error occurred. Please try again."
+        )
+    finally:
+        # Always cancel the typing indicator when done
+        typing_task.cancel()
 
 
-def main():
+# ── Main Entry Point ───────────────────────────────────────────────────────────
+
+async def main():
+    """
+    Start the Telethon client in Bot API mode using a Bot Token from @BotFather.
+    No phone number or OTP is required — simply set TELEGRAM_BOT_TOKEN in .env.
+    """
+    # ── Pre-flight check ──────────────────────────────────────────────────────
     if not cfg.TELEGRAM_BOT_TOKEN:
-        logger.critical("TELEGRAM_BOT_TOKEN is not set.")
+        logger.critical(
+            "[Bot] TELEGRAM_BOT_TOKEN is not set! "
+            "Please add it to your .env file and restart."
+        )
         return
 
     logger.info("=" * 60)
-    logger.info("  %s — Starting Up (Telegram Bot API Polling)", cfg.AGENT_NAME)
+    logger.info("  %s — Starting Up (Bot API Mode)", cfg.AGENT_NAME)
     logger.info("  Model     : %s", cfg.DEFAULT_MODEL)
     logger.info("  Memory    : %d messages per chat", cfg.SHORT_TERM_LIMIT)
     logger.info("  Tools     : %s", ", ".join(registry.list_tools()))
     logger.info("=" * 60)
 
-    app = Application.builder().token(cfg.TELEGRAM_BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start_cmd))
-    app.add_handler(CommandHandler("help", help_cmd))
-    app.add_handler(CommandHandler("status", status_cmd))
-    app.add_handler(CommandHandler("reset", reset_cmd))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler))
+    # ── Connect via Bot Token (no phone / OTP needed) ─────────────────────────
+    await client.start(bot_token=cfg.TELEGRAM_BOT_TOKEN)
+
+    me = await client.get_me()
+    logger.info(
+        "[Bot] Authenticated as: %s (@%s) [ID: %s]",
+        me.first_name, me.username, me.id
+    )
 
     if cfg.TELEGRAM_OWNER_ID:
         logger.info("[Bot] Restricted to owner ID: %d", cfg.TELEGRAM_OWNER_ID)
     else:
-        logger.info("[Bot] Running in PUBLIC mode.")
+        logger.info("[Bot] Running in PUBLIC mode (responding to all users).")
 
-    app.run_polling(drop_pending_updates=True)
+    print(f"\n✅ {cfg.AGENT_NAME} (@{me.username}) is online and listening...")
+    print("   Mode: Bot API  |  Press Ctrl+C to stop.\n")
+
+    # Keep the client running until manually stopped
+    await client.run_until_disconnected()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("[Bot] Shutdown requested by user (Ctrl+C). Goodbye!")

@@ -3,6 +3,10 @@
 # Environment secrets — NEVER commit!
 .env
 
+# Telethon session file (contains auth token)
+*.session
+*.session-journal
+
 # Memory persistence file
 fluxclaw_memory.json
 

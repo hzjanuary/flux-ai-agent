@@ -198,3 +198,12 @@ async def test_untrusted_tool_output_cannot_grant_write(build, monkeypatch):
     assert "APPROVAL" in await dispatcher.handle(Update(42, 42, 1, "read file"))
     assert not (dispatcher.store.path.parent / "notes").exists()
     assert "UNTRUSTED TOOL DATA" in model.calls[1]["messages"][-1]["content"]
+
+
+async def test_real_adapter_response_byte_limit(settings):
+    config = replace(settings, provider_enabled=True, provider_key="synthetic-provider-key")
+    adapter = OpenRouter(
+        config, httpx.MockTransport(lambda request: httpx.Response(200, content=b"x" * 1000001))
+    )
+    with pytest.raises(ProviderError, match="invalid_output"):
+        await adapter.complete([], config.model, 100, 5)

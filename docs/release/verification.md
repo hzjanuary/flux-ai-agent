@@ -4,7 +4,7 @@ Date: 2026-10-29. Baseline: `0eb150a8b5cca3db96bb62f5462a82a25d2ccba1`. Branch: 
 
 ## Exact scope and identities
 
-- Offline source/test snapshot: `34f0eb53cba518a9e2043d6103d7f5a885c0dbb1`; **203 tests passed**. Final delivery adds evidence/plan documentation only. The final clean HEAD is also retested and archived locally; `artifacts/source-archive.json` records its exact SHA/archive hash without a self-referencing Git commit.
+- Offline source/test snapshot: `34f0eb53cba518a9e2043d6103d7f5a885c0dbb1`; **203 tests passed**. Final delivery adds release evidence, narrowly reviewed scanner configuration and CI verification; all runtime/image build inputs remain unchanged. The final clean HEAD is also retested and archived locally; `artifacts/source-archive.json` records its exact SHA/archive hash without a self-referencing Git commit.
 - Local image: `fluxclaw:spec001-verified`; Docker image ID **`sha256:c29173703247edc6318454b0a96f7e88ccae0417dac370ad1016c417144a774e`**. Embedded source revision: **`4d883d93d45dec5765a7499e6db8b75cf7de92f1`**. It is a local OCI image identity, not a published registry digest. All Docker build inputs match the tested source snapshot byte-for-byte: [build-inputs.json](build-inputs.json).
 - Python: host clean install/tests 3.13.2; actual container 3.12.16 (Alpine 3.24.3, linux/amd64). GitHub CI targets Python 3.12 but has **not run remotely**.
 - **Real provider generations: 0; real summary generations: 0; real Telegram connections/logins/messages: 0; real search requests: 0.** HTTPX transports, model responses and Telethon clients/events in tests are deterministic fixtures. They prove local contracts, not provider availability or actual Telegram delivery.
@@ -53,6 +53,7 @@ uv run pytest -q
 uv run python scripts/clean_install.py
 uv run python scripts/security_gate.py
 uv run python scripts/history_audit.py
+uv run python scripts/scanner_canary.py
 uv export --locked --all-extras --no-emit-project --format requirements-txt --output-file artifacts/dev-requirements.lock > /dev/null
 uv run pip-audit --disable-pip --no-deps -r artifacts/dev-requirements.lock --format json --output artifacts/development-dependency-audit.json
 uv run python scripts/source_archive.py
@@ -73,7 +74,7 @@ Trivy `0.76` image pinned at `aquasec/trivy@sha256:790fd66d1697395d8693d1acaa1ea
 
 Initial findings are retained: [Debian image scan](initial-debian-image-scan.json) failed with 44 HIGH findings; [first development audit](initial-development-dependency-audit.json) found vulnerable pytest/lxml; [intermediate Alpine image](intermediate-alpine-image-scan.json) still had 5 MEDIUM + 1 LOW in unused base pip. Development packages were updated; Debian was replaced by the smaller compatible Alpine base; unused pip/ensurepip were removed from the final immutable runtime. No CVE was suppressed/ignored. Current [runtime audit](dependency-audit.json): 11 dependencies, 0 findings; [development audit](development-dependency-audit.json): 69 dependencies, 0 findings. [Production SBOM](sbom.cdx.json) and [license texts](third-party-licenses.json) reflect the locked closure.
 
-History scan used pinned Gitleaks with full reachable history and redaction, plus [history-audit.json](history-audit.json). The eight historical repeated-character Telegram examples were individually classified as synthetic; no confirmed credential was found. Scanners do not prove absence of all secrets. No owner private file was opened or overwritten.
+History scan used pinned Gitleaks v8.30.1 with full reachable history and redaction, plus [history-audit.json](history-audit.json). The eight historical repeated-character Telegram examples were individually classified as synthetic; no confirmed credential was found. Scanners do not prove absence of all secrets. No owner private file was opened or overwritten. The final default-rule Gitleaks scan flagged nine false positives: three occurrences of the syntax-only `0123456789abcdef` test app hash and six occurrences of the official Python base image’s **public** GPG signing fingerprint. Raw redacted findings are retained in [gitleaks-reviewed-findings.json](gitleaks-reviewed-findings.json). `.gitleaks.toml` extends all defaults and restricts each reviewed exception by exact value AND exact file pattern for only generic-api-key. It does not skip commits, directories or real credential formats. [scanner-canary.json](scanner-canary.json) proves an unrelated synthetic credential is still detected inside an exception-listed file. The configured full-history rescan passes; these are reviewed content classifications, not removed findings or broad exceptions.
 
 ## Remaining authorization and review
 

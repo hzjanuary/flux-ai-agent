@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "canary": "synthetic OpenRouter-shaped value, not an issued credential",
+  "path": "tests/test_config_cli.py",
+  "scanner_exit": 1,
+  "detected_rules": [
+    "generic-api-key"
+  ],
+  "allowlists_do_not_disable_other_credentials": true
+}

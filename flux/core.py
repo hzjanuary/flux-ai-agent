@@ -22,8 +22,10 @@ Available tools: """
 
 def parse_call(text: str) -> tuple[str, dict[str, Any]] | None:
     stripped = text.strip()
-    if not stripped.startswith(("{", "[", "```")):
-        if '"action"' in stripped and '"TOOL_CALL"' in stripped:
+    protocol = {"action", "tool_name", "tool_args"}
+    looks_like_call = any(re.search(r'"' + key + r'"\s*:', stripped) for key in protocol)
+    if not stripped.startswith(("{", "[")):
+        if looks_like_call:
             raise InvalidCall("malformed_tool_call")
         return None
     try:
@@ -38,7 +40,11 @@ def parse_call(text: str) -> tuple[str, dict[str, Any]] | None:
 
         data = json.loads(stripped, object_pairs_hook=unique)
     except (ValueError, RecursionError) as exc:
-        raise InvalidCall("malformed_tool_call") from exc
+        if looks_like_call:
+            raise InvalidCall("malformed_tool_call") from exc
+        return None  # Ordinary answer text cannot grant tool authority.
+    if not looks_like_call:
+        return None
     if (
         type(data) is not dict
         or set(data) != {"action", "tool_name", "tool_args"}

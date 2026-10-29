@@ -207,3 +207,15 @@ async def test_real_adapter_response_byte_limit(settings):
     )
     with pytest.raises(ProviderError, match="invalid_output"):
         await adapter.complete([], config.model, 100, 5)
+
+
+@pytest.mark.parametrize(
+    "answer",
+    ['{"result":42}', "[]", "{}", '```json\n{"result":42}\n```', "```python\nprint(42)\n```"],
+)
+async def test_ordinary_structured_answers_do_not_become_tool_calls(build, store, answer):
+    dispatcher, model, _, agent = build(answer)
+    assert await dispatcher.handle(Update(42, 42, 1, "show an example")) == answer
+    assert len(model.calls) == 1 and agent.metrics["tool_calls"] == 0
+    assert store.history(42)[-1] == {"role": "assistant", "content": answer}
+    assert store.db.execute("SELECT count(*) FROM approvals").fetchone()[0] == 0

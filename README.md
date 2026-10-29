@@ -2,7 +2,13 @@
 
 A self-hosted personal Telegram AI agent for one owner, in Vietnamese or English. A small Python ReAct core, smart direct/web/tool routing, typed tools and durable per-chat SQLite memory; Telethon is a thin optional adapter. Python 3.12+, ordinary CPU, no model download or cloud backend required.
 
-This branch is a **source preview under review**. Live Telegram/provider behavior and publication approval are separate gates in [verification](docs/release/verification.md). There is no public-user mode or autonomous shell execution.
+Version **0.1.0 is an early source-only preview**, shared for community review. SPEC-001 remains **22 PASS / 0 FAIL / 2 BLOCKED**: actual Telegram delivery and live model generation have **not been verified for this release** (FLUX-04), and independent security/release review remains incomplete (FLUX-24). See [verification](docs/release/verification.md) and the [source-preview decision](docs/release/source-only-v0.1.0.md).
+
+## Security Notice — Review Before Self-Hosting
+
+Owner-only access is a required default: a missing or zero owner ID refuses startup. Configure the AI provider and exact model explicitly; remote providers can receive conversation content and usage may incur costs. ReAct tools have bounded permissions, shell execution is unsupported, and write actions require explicit owner approval by default. SQLite memory, sessions, exports and backups remain the operator's responsibility and are not encrypted at rest.
+
+Offline tests and security/license scans are dated evidence, **not a guarantee of future safety**. No independent security signoff or unrestricted production approval is claimed. The latest verified candidate had 252 offline tests and successful remote offline/container CI; its image scan on **2026-10-29** reported zero known vulnerabilities and zero secrets. Exact commits, run IDs, scan scope and residual risks are recorded in [verification](docs/release/verification.md); the release notes identify the final publication commit. No prebuilt Docker image is distributed with this source preview. Review [SECURITY.md](SECURITY.md) before enabling any live provider or Telegram connection.
 
 ## Safe local quick start
 

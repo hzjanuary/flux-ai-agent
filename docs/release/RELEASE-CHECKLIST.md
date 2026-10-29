@@ -17,8 +17,14 @@ Local evidence and authorization are separate. A PASS may concern only fixture/o
 
 Blocked live work does not require granting broad host access or relaxing ACL/tool checks. The minimal next permission is a bounded live bot+specified-model smoke with explicit generation/spend ceilings and owner identity, separately from push/publication/deployment.
 
-## Current authorized scope supersedes future/live checklist suggestions above
+## Early source-only v0.1.0 authorization supersedes historical holds above
 
-See [source-only-v0.1.0.md](source-only-v0.1.0.md) for the proposed source-only owner decision. Ordinary feature-branch push, one Draft PR and remote CI are now authorized. Automated CI/source/image gates have actual passing evidence at a143673; independent signoff and publication are still not granted.
+The owner explicitly authorized one early source-only v0.1.0 GitHub pre-release through the normal PR #1 merge workflow, after final candidate gates. See [source-only-v0.1.0.md](source-only-v0.1.0.md). Green remote source/image CI is automated evidence, not independent signoff. Maintain **22 PASS / 0 FAIL / 2 BLOCKED**; source publication cannot clear FLUX-04 or FLUX-24.
 
-The selected live scope is exactly one synthetic private exchange using OpenRouter openai/gpt-oss-20b:free, one generation/128 output tokens/0.00 USD, after private evidence review and final named confirmation. **Do not perform the additional live unauthorized-event, approval, note/restart or recovery tests mentioned in the historical checklist above.** Preserve their existing offline coverage instead. Do not merge/tag/release/publish/deploy automatically after Phase A/C or preflight.
+- [x] Owner accepts a source preview despite the blocked live and independent-review criteria; MIT/NOTICE/third-party attributions remain included.
+- [ ] Verify final candidate push/PR CI, merge result, main SHA, v0.1.0 tag, generated ZIP/tar.gz private-path/content checks and Pre-release flag. Actual completion is recorded in release notes/operator evidence after publication.
+- [ ] Maintenance: conduct only the separately approved bounded live smoke after private identity/account/billing/privacy review and final named confirmation. Keep actual evidence separate from fixtures.
+- [ ] Maintenance: obtain independent security/ownership review and complete all original FLUX-24 conditions; retain dated raw scan/history/license evidence and known limitations.
+- [ ] Any future image publication or deployment needs a separate decision and current image-security review. No image is distributed in this source release.
+
+The selected live scope is exactly one synthetic private exchange using OpenRouter openai/gpt-oss-20b:free, one generation/128 output tokens/0.00 USD, after private evidence review and final named confirmation. **Do not perform the additional live unauthorized-event, approval, note/restart or recovery tests mentioned in the historical checklist above.** Preserve their existing offline coverage instead. Source publication does not authorize live execution or another development/deployment campaign.

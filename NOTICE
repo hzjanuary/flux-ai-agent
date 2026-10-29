@@ -13,4 +13,5 @@ are found, report them privately before publication.
 Third-party dependencies retain their own copyright and license terms.
 Exact production dependency versions, license texts, URLs and metadata are in
 docs/release/third-party-licenses.json; requirements.lock and uv.lock pin artifacts.
-Source-preview review does not authorize image or source publication.
+The owner authorized an early source-only v0.1.0 preview. This does not imply
+independent security certification, prebuilt-image approval or deployment approval.

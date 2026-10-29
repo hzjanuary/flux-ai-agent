@@ -1,8 +1,8 @@
 # SPEC-001 verification — remote CI passes; live/release remain blocked
 
-Date: 2026-10-29. Baseline: `0eb150a8b5cca3db96bb62f5462a82a25d2ccba1`. Branch: `feat/spec-001-oss-fluxclaw`. **Plan ACTIVE.** Feature-branch push and Draft PR #1 were explicitly authorized and performed. No merge, tag, GitHub release, prebuilt image publication, Telegram connection/login/delivery, model generation or deployment has occurred.
+Date: 2026-10-29. Baseline: `0eb150a8b5cca3db96bb62f5462a82a25d2ccba1`. Branch: `feat/spec-001-oss-fluxclaw`. **Plan ACTIVE; 22 PASS / 0 FAIL / 2 BLOCKED.** The owner explicitly authorized early source-only v0.1.0 publication through PR #1 despite FLUX-04 and FLUX-24 remaining BLOCKED. Final merge/tag/release outcomes belong to the GitHub release and final operator evidence, not the historical snapshots below. No prebuilt image publication, Telegram connection/login/delivery, model generation or deployment is authorized by this decision.
 
-## Exact scope and identities
+## Historical local scope and identities
 
 - Offline source/test snapshot: `c4cf3286a8f9fdff145f5bfa8690bc5354b5adca`; **235 tests passed**. The follow-up audit added pre-decoding HTTP limits, canonical private-root checks, ordinary structured-answer routing, quoted credential redaction and fail-closed scan/license coverage gates. The listed image was rebuilt from this exact code snapshot. Final delivery adds evidence/operating documentation; runtime/image build inputs remain unchanged from this snapshot. The final clean HEAD is also retested and archived locally; `artifacts/source-archive.json` records its exact SHA/archive hash without a self-referencing Git commit.
 - Local image: `fluxclaw:spec001-review2`; Docker image ID **`sha256:6664713599bd1fc216a545c16990e6646211f74daa28859c9c0aa9a976546d1a`**. Embedded source revision: **`c4cf3286a8f9fdff145f5bfa8690bc5354b5adca`**. It is a local OCI image identity, not a published registry digest. All Docker build inputs match the tested source snapshot byte-for-byte: [build-inputs.json](build-inputs.json).
@@ -11,7 +11,9 @@ Date: 2026-10-29. Baseline: `0eb150a8b5cca3db96bb62f5462a82a25d2ccba1`. Branch: 
 
 ## Authorized remote verification
 
-Draft PR: https://github.com/hzjanuary/flux-ai-agent/pull/1 (open, draft, targeting main). Verified source snapshot: `a143673c534b2c43f4b89c5e04a99622625a884d`. Workflow ID: `400337039`.
+PR: https://github.com/hzjanuary/flux-ai-agent/pull/1 (targeting main). Workflow ID: `400337039`. The last verified source before publication documentation was `0b8dc3405452faff9f4133044d558164a12285f3`: push [40843691774](https://github.com/hzjanuary/flux-ai-agent/actions/runs/40843691774) and PR [40843697225](https://github.com/hzjanuary/flux-ai-agent/actions/runs/40843697225) both passed offline/container jobs with 252 tests. Four downloaded ZIP digests and source bytes/modes were verified. Both image scans on 2026-10-29 08:39 UTC reported zero vulnerabilities and zero secrets. Final publication documentation must pass the same CI before merge; the release notes record those final runs and the merged main SHA.
+
+The following earlier verified snapshot and its raw evidence are preserved: `a143673c534b2c43f4b89c5e04a99622625a884d`.
 
 | Event | Run | Offline | Container |
 | --- | --- | --- | --- |
@@ -24,7 +26,7 @@ Initial genuine runs `40837677218` and `40837832607` failed at `production_lock_
 
 Phase B operator selection is OpenRouter `openai/gpt-oss-20b:free`, one request, 128 output tokens, 0.00 USD, no retry/fallback/search/summary/tools. Dedicated bot identity and private credentials/evidence have not been authenticated. A 0600 private template in a 0700 dedicated directory and an offline-only checker are prepared; see [live-smoke-preparation.md](live-smoke-preparation.md). The checker never grants live approval. Real generations/connections/deliveries remain zero.
 
-Automated source/image gate acceptance (FLUX-20) is distinct from independent human security review and release approval (FLUX-24). The proposal is **source-only v0.1.0**, not a tag/release action; see [source-only-v0.1.0.md](source-only-v0.1.0.md). Final delivery documentation may follow the verified snapshot; final HEAD/run/archive identities are additionally recorded in the local `artifacts/remote-verification/` evidence rather than trying to embed a commit's own SHA inside itself.
+Automated source/image gate acceptance (FLUX-20) is distinct from independent human security review and full release completion (FLUX-24). The owner authorized **early source-only v0.1.0**; see [source-only-v0.1.0.md](source-only-v0.1.0.md). This limited decision does not clear FLUX-04 or FLUX-24. Final HEAD/run/archive identities are recorded in release notes and local `artifacts/` evidence rather than trying to embed a commit's own SHA inside itself.
 
 ## Acceptance matrix
 
@@ -51,11 +53,11 @@ PASS here applies to the explicitly stated offline scope. No fixture is treated 
 | FLUX-17 | PASS | Real HTTP adapter fixtures classify 401/402/403/404 as terminal; no implicit fallback; explicit 429 fallback counts both attempts; transport timeout/error and invalid body tests. |
 | FLUX-18 | PASS | No configured/enabled provider/model => CLI/adapter refusal; no selectable fake production model; provider errors never stored as successful assistant answers. |
 | FLUX-19 | PASS | Config secrets omitted from repr; redacted prompt/transcript/reply assertions including quoted JSON/Python credential fields, whitespace and escapes, no prompt/private logging; unexpected SDK exception becomes static CLI failure. Source/history/Trivy secret scans clean. Generic redaction cannot identify every possible secret; backups/imports are intentionally private. |
-| FLUX-20 | PASS | Genuine push and PR CI on `a143673` passed all jobs, 252 tests, lint/types, isolated install, exact lock/license/source/history/secret/dependency/archive gates and container scan/restart/SBOM. Artifact ZIP digests, source bytes/modes and source/image trees validated. This is automated verification, not independent signoff. |
+| FLUX-20 | PASS | Genuine push and PR CI on `0b8dc34` (runs 40843691774 / 40843697225), and the earlier `a143673`, passed all jobs, 252 tests, lint/types, isolated install, exact lock/license/source/history/secret/dependency/archive gates and container scan/restart/SBOM. Artifact ZIP digests, source bytes/modes and source/image trees validated. Final publication CI must also pass. This is automated verification, not independent signoff. |
 | FLUX-21 | PASS | Fresh runtime-only install, zero-network first-run CLI, actual restricted container initialization/refusal, atomic note+memory persistence over new containers and documented owner provisioning/backup/restore. Actual bot delivery remains FLUX-04 BLOCKED. |
 | FLUX-22 | PASS | Full baseline Git authors/history/credits reviewed; same repository owner identities, no vendored upstream source found; LICENSE/NOTICE + 11 exact production license texts. Limits of authorship inference documented; operator publication review remains required. |
 | FLUX-23 | PASS | README/SECURITY and operating docs accurately describe personal use, remote inference privacy/cost, plaintext local state, prompt injection, at-most-once uncertain delivery, internet egress and release limitations. |
-| FLUX-24 | BLOCKED | Remote CI, local/image provenance and source-only release proposal are recorded separately. Actual Telegram/provider evidence remains absent; independent security/ownership review, source release approval and separate prebuilt-image signoff are not granted. Draft PR only; no merge/tag/release/image publication/deployment. |
+| FLUX-24 | BLOCKED | Remote CI, source/archive/image provenance, live evidence and publication decisions remain separate. Owner approval covers only an early source-only v0.1.0 preview. Actual Telegram/provider evidence is absent; independent security/ownership review, complete original release conditions and separate image-security signoff remain outstanding. Source publication alone cannot mark this criterion PASS. |
 
 ## Reproduce the local gates
 
@@ -95,6 +97,6 @@ History scan used pinned Gitleaks v8.30.1 with full reachable history and redact
 
 ## Remaining authorization and review
 
-Authorized feature-branch source is now public for Draft PR review. Automated remote gates pass; **no v0.1.0 release, production acceptance or independent signoff is implied**. The source/image/CI/live decisions remain separate in [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
+The owner explicitly accepts a limited early source-only v0.1.0 preview with **22 PASS / 0 FAIL / 2 BLOCKED**, subject to final candidate checks and normal GitHub merge rules. This is not full SPEC-001 completion, production acceptance or independent signoff. The source/image/CI/live decisions remain separate in [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
 
-The model and budget are selected, but Phase B remains BLOCKED. Complete the private input file locally, run the offline preflight and STOP for manual evidence review and final confirmation of the named bot/owner/model/zero-spend conditions before any live access. Do not send credentials or owner IDs through chat. The only proposed live scope is one synthetic private exchange: no extra live ACL, approval or recovery tests are authorized; preserve their offline evidence separately. Push/remote CI are authorized, while merge, tag, release, registry publication/signing and deployment remain prohibited without separate operator decisions.
+The model and budget are selected, but Phase B remains BLOCKED. Complete the private input file locally, run the offline preflight and STOP for manual evidence review and final confirmation of the named bot/owner/model/zero-spend conditions before any live access. Do not send credentials or owner IDs through chat. The only proposed live scope is one synthetic private exchange: no extra live ACL, approval or recovery tests are authorized; preserve their offline evidence separately. Normal PR merge, tag v0.1.0 and one source-only GitHub pre-release are now explicitly authorized after final gates; live access, registry publication/signing and deployment remain outside this publication campaign.

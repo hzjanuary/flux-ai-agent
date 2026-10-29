@@ -28,3 +28,9 @@ The operator explicitly authorized ordinary feature-branch pushes and exactly on
 Phase B selection: OpenRouter openai/gpt-oss-20b:free, maximum one request, 128 output tokens and 0.00 USD, without retry/fallback/search/summary/tools. A separate private 0600 env template in a 0700 directory and an offline-only preflight were prepared. Bot identity/credentials and billing/access/privacy evidence plus final named confirmation remain pending. No live access is authorized by preflight success. No extra live ACL/recovery/approval tests.
 
 Plan remains ACTIVE. No merge/tag/GitHub release/prebuilt image publication/deployment or independent security signoff is authorized. Source-only v0.1.0 is a review proposal, not an automatic release.
+
+## Owner-authorized early source-only v0.1.0 (2026-10-29)
+
+This newer explicit decision supersedes the historical merge/tag/source-publication holds above for one release only. The owner accepts 22 PASS / 0 FAIL / 2 BLOCKED and authorizes publication documentation, normal push, green final CI, PR #1 ready/merge without bypass, tag v0.1.0 on merged main and one GitHub pre-release with generated source ZIP/tar.gz only. Verify final source/archive/license/private exclusions, release flag/tag/main identities and retain raw evidence. Do not publish a Docker image, connect to Telegram, call a model, search or deploy.
+
+Plan remains **ACTIVE** after source publication: FLUX-04 and FLUX-24 remain BLOCKED until their complete original conditions are satisfied. Live smoke still requires private evidence review and final named operator confirmation. Independent security/image signoff is not fabricated or inferred. Stop after the single source publication; no new implementation, inference or deployment campaign.

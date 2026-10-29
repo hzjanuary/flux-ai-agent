@@ -20,3 +20,11 @@ Plan remains **ACTIVE**. FLUX-04 actual Telegram+provider exchange, FLUX-20 remo
 ## Follow-up boundary audit (2026-10-29)
 
 Confirmed and fixed private-root exclusion bypass through configured parent components, sensitive root ancestors, and remote response inflation before the byte check. Added pre-body encoding/length checks and bounded identity JSON reads for both real provider/search adapters. Release gates now reject incomplete OS/Python image coverage, missing image identity, stale license versions and stale production exports. Flat Python-only Docker build inputs exclude ignored package data/caches. Ordinary JSON/code answers remain text; reserved tool-call fields still require the strict envelope and cannot grant approval. Quoted credential values are redacted across prompt/transcript/reply boundaries, including whitespace and escapes. 235 offline tests PASS; image rebuilt and rescanned separately. No live/network-runtime permission was inferred from continuation.
+
+## Authorized remote Phase A / private preparation / Phase C
+
+The operator explicitly authorized ordinary feature-branch pushes and exactly one Draft PR into main, then directed completion of Phase A/C after the reviewed export-comment CI failure. Draft PR #1 exists. The fix preserves dependency/version/hash/marker checks; genuine push and PR CI pass at a143673 (252 tests and every gate), with verified downloaded artifacts. FLUX-20 automated gates now PASS; independent review remains FLUX-24 BLOCKED.
+
+Phase B selection: OpenRouter openai/gpt-oss-20b:free, maximum one request, 128 output tokens and 0.00 USD, without retry/fallback/search/summary/tools. A separate private 0600 env template in a 0700 directory and an offline-only preflight were prepared. Bot identity/credentials and billing/access/privacy evidence plus final named confirmation remain pending. No live access is authorized by preflight success. No extra live ACL/recovery/approval tests.
+
+Plan remains ACTIVE. No merge/tag/GitHub release/prebuilt image publication/deployment or independent security signoff is authorized. Source-only v0.1.0 is a review proposal, not an automatic release.

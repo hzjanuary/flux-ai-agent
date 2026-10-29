@@ -43,6 +43,8 @@ Only proceed when you intend to contact Telegram and incur configured provider c
 
 Only incoming, non-forwarded, non-bot **private messages** from the configured sender in that same owner's private chat are accepted. Commands and approvals use the identical guard. Groups and channels are rejected. Messages are deduplicated durably, including after restart. A busy bot asks the owner to retry rather than accumulating an unbounded queue.
 
+For the separately bounded live-smoke preparation, use the [private-input/offline-check runbook](docs/release/live-smoke-preparation.md). The normal bot/chat commands below are not the one-shot campaign runner.
+
 ## Local provider chat
 
 ```bash

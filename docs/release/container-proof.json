@@ -1,6 +1,6 @@
 {
-  "image_id": "sha256:c29173703247edc6318454b0a96f7e88ccae0417dac370ad1016c417144a774e",
-  "source_revision": "4d883d93d45dec5765a7499e6db8b75cf7de92f1",
+  "image_id": "sha256:7abe1e9d235fc18599a2124d2628811b9856a1d3ab5b2d477d2217955640fd2a",
+  "source_revision": "44d0474bde063ac1152923f169909985939e2deb",
   "init": "Private configuration created; remote inference disabled. Edit it locally, then run flux doctor.",
   "doctor": "PASS: offline configuration valid; generation calls=0; Telegram connections=0.\nBot not configured; startup remains disabled.",
   "invalid_bot_refused": true,

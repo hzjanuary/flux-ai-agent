@@ -9,6 +9,7 @@ Protect the owner's provider quota, Telegram bot session, credentials, files, me
 | Duplicate acknowledged write | durable update claim, one-use approval, atomic note publication | test_identity; test_tools |
 | Shell or arithmetic resource abuse | execution tool removed; bounded numeric AST | test_tools; source gate |
 | Traversal/symlink/hardlink/secret reads | explicit root, descriptor traversal, O_NOFOLLOW, file type/name/size checks | test_tools |
+| Compressed/oversized provider or search responses | reject nonidentity encoding and oversized length before body, then cap streamed JSON bytes | test_http_boundaries |
 | Partial/cross-chat memory writes | SQLite WAL/FULL, transactional scope, new-only restore | test_memory |
 | Loss after failed summary | source snapshot + success-only summary transaction | test_memory |
 | Quota abuse/fallback billing/auth loops | positive owner required, per-turn/daily calls, terminal error classes | test_provider_core |

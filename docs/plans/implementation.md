@@ -13,6 +13,10 @@ No Telegram login, generation, model download, public access, source push or pub
 
 ## Local implementation result (2026-10-29)
 
-F0–F4 local engineering implemented and verified: bounded core/CLI, single-owner adapter, approvals/files/math, SQLite migration/recovery, provider budgets/error classes, 203 offline tests, lint/format/strict types, fresh runtime-only install, actual restricted container restart, exact lock/licenses/SBOM/source/history/secret gates and clean full image scan. Detailed per-requirement evidence: docs/release/verification.md.
+F0–F4 local engineering implemented and verified: bounded core/CLI, single-owner adapter, approvals/files/math, SQLite migration/recovery, provider budgets/error classes, 232 offline tests, lint/format/strict types, fresh runtime-only install, actual restricted container restart, exact lock/licenses/SBOM/source/history/secret gates and clean full image scan. Detailed per-requirement evidence: docs/release/verification.md.
 
 Plan remains **ACTIVE**. FLUX-04 actual Telegram+provider exchange, FLUX-20 remote CI/independent security-release signoff and FLUX-24 operator publication decisions are BLOCKED by the explicit authorization boundary. No live credentials were requested/used; no push, PR, tag, publication or deployment performed. Do not mark the full goal complete based on local fixtures.
+
+## Follow-up boundary audit (2026-10-29)
+
+Confirmed and fixed private-root exclusion bypass through configured parent components, sensitive root ancestors, and remote response inflation before the byte check. Added pre-body encoding/length checks and bounded identity JSON reads for both real provider/search adapters. Release gates now reject incomplete OS/Python image coverage, missing image identity, stale license versions and stale production exports. Flat Python-only Docker build inputs exclude ignored package data/caches. Ordinary JSON/code answers remain text; reserved tool-call fields still require the strict envelope and cannot grant approval. 232 offline tests PASS; image rebuilt and rescanned separately. No live/network-runtime permission was inferred from continuation.

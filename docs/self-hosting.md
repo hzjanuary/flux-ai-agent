@@ -6,7 +6,7 @@ See README for owner-ID and bot-token setup. Explicitly start only after provisi
 
 ## Optional Docker
 
-Dockerfile pins both base images by digest and installs the locked production closure into a virtualenv. The final image runs uid/gid 10001, includes LICENSE/NOTICE and actual third-party license texts, and contains no owner settings, sessions, memory or host home mounts. `.dockerignore` permits only build inputs. No image is automatically published.
+Dockerfile pins both base images by digest and installs the locked production closure into a virtualenv. The final image runs uid/gid 10001, includes LICENSE/NOTICE and actual third-party license texts, and contains no owner settings, sessions, memory or host home mounts. `.dockerignore` permits only build inputs, including flat package Python modules; ignored caches/private package data are excluded. No image is automatically published.
 
 Build and initialize a **new** private volume (these commands download/build packages, not models):
 

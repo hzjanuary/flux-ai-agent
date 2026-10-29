@@ -3,37 +3,37 @@
   "Trivy": {
     "Version": "0.76.1"
   },
-  "ReportID": "01a18670-d964-7841-8d81-306df9eb847c",
-  "CreatedAt": "2026-10-29T06:55:05.06054499Z",
-  "ArtifactID": "sha256:b2a8fa8d18a191efa8bf59a84c1bf7fc5f869244e7cd7a66192ac78cfcdd25ff",
-  "ArtifactName": "/scan/verified-image.tar",
+  "ReportID": "01a18688-35a5-7675-88d1-4ad4d80594bf",
+  "CreatedAt": "2026-10-29T07:20:36.005425247Z",
+  "ArtifactID": "sha256:570e954b3674d53bfecffa2d526d82ddbd197209261341980d086205a25cc8a7",
+  "ArtifactName": "/scan/review2-image.tar",
   "ArtifactType": "container_image",
   "Metadata": {
-    "Size": 69027328,
+    "Size": 69033472,
     "OS": {
       "Family": "alpine",
       "Name": "3.24.3"
     },
-    "ImageID": "sha256:c6ada4f53c30323bb079d6e61f66629f1ec0e10116a93d1decac80bf0fd0df86",
+    "ImageID": "sha256:adbc48b89b4e7ae5947ab435daa7c8111923805191fd2640d2e85cbce52f15df",
     "DiffIDs": [
       "sha256:75c137aedfb2760f88629236cb7b797630aed0c3d91d626d1d1bb694878fc2ba",
       "sha256:7bd6d027fc875b5a1381ea6ac95905162cfb2b132bb4929d840003cd1d78e1c0",
       "sha256:a26f58fa1b9b9fd9d49e1da2afd314c5f866fdff7eabc6499991c01a3738707c",
       "sha256:6cf2f486e746e9ff3bc52010eb7ed34ee4766eb83bc7105895da35537de7b582",
-      "sha256:0f6305886c817b0b94204b7c4736f887ce68db96d822e448b130a785f8455b7a",
-      "sha256:a7281dd0803ce480fc7eb1a8550a5ab83bd76181d055a5fc29757f7e281559c4",
-      "sha256:0f39eef68644368d8472684667fc72ae878800f470a47675dabf1032074ffc5c",
-      "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830",
-      "sha256:f4887c5b54391810b95dd8798912e1d585fcb10f06aba2bf9d82f6068515062d",
-      "sha256:b810f93db04d2c186539d193858a0a1ba200df013b6c94f974af4e43d61ca98e"
+      "sha256:9448cd4dfdd2815b0c5cf9ca97c863e81809818fe6d405154f6c508f9672ead4",
+      "sha256:fcfbff12936cff51d6e64a865b859bb3d0bb7322e4313a1dbf1e490cb7e5546f",
+      "sha256:1c210ede2717d67a81962dca81b417e26515088c7e8202a8464f78ab6c5b3ac1",
+      "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc",
+      "sha256:2b4feb7c9d9f369c288bb2c14d6d4c8c446fa2484ed76f5530453090ba85c97e",
+      "sha256:8e9b73c59d7c8009e8839fdcbb7cab6dec42bab01230fcdcf3b4b6919a78ca9b"
     ],
     "RepoTags": [
-      "fluxclaw:spec001-verified"
+      "fluxclaw:spec001-review2"
     ],
-    "Reference": "fluxclaw:spec001-verified",
+    "Reference": "fluxclaw:spec001-review2",
     "ImageConfig": {
       "architecture": "amd64",
-      "created": "2026-10-29T13:53:56.117954288+07:00",
+      "created": "2026-10-29T14:19:04.626008408+07:00",
       "history": [
         {
           "created": "2026-10-21T22:37:22.870489069Z",
@@ -98,73 +98,73 @@
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:51.857056821+07:00",
-          "created_by": "ARG SOURCE_REVISION=4d883d93d45dec5765a7499e6db8b75cf7de92f1",
+          "created": "2026-10-29T14:18:59.11812195+07:00",
+          "created_by": "ARG SOURCE_REVISION=44d0474bde063ac1152923f169909985939e2deb",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:51.857056821+07:00",
-          "created_by": "LABEL org.opencontainers.image.source=https://github.com/hzjanuary/flux-ai-agent org.opencontainers.image.licenses=MIT org.opencontainers.image.revision=4d883d93d45dec5765a7499e6db8b75cf7de92f1",
+          "created": "2026-10-29T14:18:59.11812195+07:00",
+          "created_by": "LABEL org.opencontainers.image.source=https://github.com/hzjanuary/flux-ai-agent org.opencontainers.image.licenses=MIT org.opencontainers.image.revision=44d0474bde063ac1152923f169909985939e2deb",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:51.857056821+07:00",
+          "created": "2026-10-29T14:18:59.11812195+07:00",
           "created_by": "ENV PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HOME=/home/flux",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:51.857056821+07:00",
-          "created_by": "RUN |1 SOURCE_REVISION=4d883d93d45dec5765a7499e6db8b75cf7de92f1 /bin/sh -c addgroup -g 10001 flux \u0026\u0026 adduser -D -u 10001 -G flux -h /home/flux flux \u0026\u0026     mkdir /data \u0026\u0026 chown flux:flux /data \u0026\u0026 chmod 0700 /data /home/flux # buildkit",
+          "created": "2026-10-29T14:18:59.11812195+07:00",
+          "created_by": "RUN |1 SOURCE_REVISION=44d0474bde063ac1152923f169909985939e2deb /bin/sh -c addgroup -g 10001 flux \u0026\u0026 adduser -D -u 10001 -G flux -h /home/flux flux \u0026\u0026     mkdir /data \u0026\u0026 chown flux:flux /data \u0026\u0026 chmod 0700 /data /home/flux # buildkit",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:51.880955809+07:00",
+          "created": "2026-10-29T14:18:59.146119203+07:00",
           "created_by": "WORKDIR /app",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:55.691617492+07:00",
-          "created_by": "RUN |1 SOURCE_REVISION=4d883d93d45dec5765a7499e6db8b75cf7de92f1 /bin/sh -c python -m pip uninstall --yes pip \u0026\u0026     python -c \"import ensurepip, pathlib, shutil; shutil.rmtree(pathlib.Path(ensurepip.__file__).parent)\" # buildkit",
+          "created": "2026-10-29T14:19:03.621881332+07:00",
+          "created_by": "RUN |1 SOURCE_REVISION=44d0474bde063ac1152923f169909985939e2deb /bin/sh -c python -m pip uninstall --yes pip \u0026\u0026     python -c \"import ensurepip, pathlib, shutil; shutil.rmtree(pathlib.Path(ensurepip.__file__).parent)\" # buildkit",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:56.04601061+07:00",
+          "created": "2026-10-29T14:19:04.549954633+07:00",
           "created_by": "COPY /app/.venv /app/.venv # buildkit",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:56.091417509+07:00",
+          "created": "2026-10-29T14:19:04.602856455+07:00",
           "created_by": "COPY LICENSE NOTICE requirements.lock /app/ # buildkit",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:56.117954288+07:00",
+          "created": "2026-10-29T14:19:04.626008408+07:00",
           "created_by": "COPY docs/release/third-party-licenses.json /app/third-party-licenses.json # buildkit",
           "comment": "buildkit.dockerfile.v0"
         },
         {
-          "created": "2026-10-29T13:53:56.117954288+07:00",
+          "created": "2026-10-29T14:19:04.626008408+07:00",
           "created_by": "USER 10001:10001",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:56.117954288+07:00",
+          "created": "2026-10-29T14:19:04.626008408+07:00",
           "created_by": "VOLUME [/data]",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:56.117954288+07:00",
+          "created": "2026-10-29T14:19:04.626008408+07:00",
           "created_by": "ENTRYPOINT [\"flux\" \"--config\" \"/data/config.json\"]",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
         {
-          "created": "2026-10-29T13:53:56.117954288+07:00",
+          "created": "2026-10-29T14:19:04.626008408+07:00",
           "created_by": "CMD [\"doctor\"]",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
@@ -178,12 +178,12 @@
           "sha256:7bd6d027fc875b5a1381ea6ac95905162cfb2b132bb4929d840003cd1d78e1c0",
           "sha256:a26f58fa1b9b9fd9d49e1da2afd314c5f866fdff7eabc6499991c01a3738707c",
           "sha256:6cf2f486e746e9ff3bc52010eb7ed34ee4766eb83bc7105895da35537de7b582",
-          "sha256:0f6305886c817b0b94204b7c4736f887ce68db96d822e448b130a785f8455b7a",
-          "sha256:a7281dd0803ce480fc7eb1a8550a5ab83bd76181d055a5fc29757f7e281559c4",
-          "sha256:0f39eef68644368d8472684667fc72ae878800f470a47675dabf1032074ffc5c",
-          "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830",
-          "sha256:f4887c5b54391810b95dd8798912e1d585fcb10f06aba2bf9d82f6068515062d",
-          "sha256:b810f93db04d2c186539d193858a0a1ba200df013b6c94f974af4e43d61ca98e"
+          "sha256:9448cd4dfdd2815b0c5cf9ca97c863e81809818fe6d405154f6c508f9672ead4",
+          "sha256:fcfbff12936cff51d6e64a865b859bb3d0bb7322e4313a1dbf1e490cb7e5546f",
+          "sha256:1c210ede2717d67a81962dca81b417e26515088c7e8202a8464f78ab6c5b3ac1",
+          "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc",
+          "sha256:2b4feb7c9d9f369c288bb2c14d6d4c8c446fa2484ed76f5530453090ba85c97e",
+          "sha256:8e9b73c59d7c8009e8839fdcbb7cab6dec42bab01230fcdcf3b4b6919a78ca9b"
         ]
       },
       "config": {
@@ -207,7 +207,7 @@
         ],
         "Labels": {
           "org.opencontainers.image.licenses": "MIT",
-          "org.opencontainers.image.revision": "4d883d93d45dec5765a7499e6db8b75cf7de92f1",
+          "org.opencontainers.image.revision": "44d0474bde063ac1152923f169909985939e2deb",
           "org.opencontainers.image.source": "https://github.com/hzjanuary/flux-ai-agent"
         },
         "User": "10001:10001",
@@ -241,39 +241,39 @@
       },
       {
         "Size": 11264,
-        "Digest": "sha256:64138e0fbaaacd5ed9a2e9ee87a3c03e6244da7b1907f72fd87189144ab3c832",
-        "DiffID": "sha256:0f6305886c817b0b94204b7c4736f887ce68db96d822e448b130a785f8455b7a"
+        "Digest": "sha256:df2f72a7b1e24536d11057da7be21c8d8b33e20baf1aa39c8732a04f4c60ab36",
+        "DiffID": "sha256:9448cd4dfdd2815b0c5cf9ca97c863e81809818fe6d405154f6c508f9672ead4"
       },
       {
         "Size": 1536,
-        "Digest": "sha256:79dd652293bbf6b31058a4963c4550d738ba36f30c24d1293d75409bb3a254e2",
-        "DiffID": "sha256:a7281dd0803ce480fc7eb1a8550a5ab83bd76181d055a5fc29757f7e281559c4"
+        "Digest": "sha256:3c968a3e01791a22bff67328e5607e78467ff38448beec5e567f41b95d8d2729",
+        "DiffID": "sha256:fcfbff12936cff51d6e64a865b859bb3d0bb7322e4313a1dbf1e490cb7e5546f"
       },
       {
         "Size": 7168,
-        "Digest": "sha256:dfac3e9649958789ad85680f90591e5925c0b736a83ba81830e108d65b4d10df",
-        "DiffID": "sha256:0f39eef68644368d8472684667fc72ae878800f470a47675dabf1032074ffc5c"
+        "Digest": "sha256:c6306aa394834b5c38b3b4470cdeeb9b8f4d185860c706da4565d06e29e44739",
+        "DiffID": "sha256:1c210ede2717d67a81962dca81b417e26515088c7e8202a8464f78ab6c5b3ac1"
       },
       {
-        "Size": 17776128,
-        "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-        "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+        "Size": 17782272,
+        "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+        "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
       },
       {
         "Size": 8192,
-        "Digest": "sha256:1ce6a4c24ec609b05084869ffc73a9d8d84eed757774b11df5ecf45410190f91",
-        "DiffID": "sha256:f4887c5b54391810b95dd8798912e1d585fcb10f06aba2bf9d82f6068515062d"
+        "Digest": "sha256:6476c0239fb0ac40c44877d6f280517e2742fc8a53599731e0d646bd7400139b",
+        "DiffID": "sha256:2b4feb7c9d9f369c288bb2c14d6d4c8c446fa2484ed76f5530453090ba85c97e"
       },
       {
         "Size": 31232,
-        "Digest": "sha256:66ee019d904397b03281911726879bcb494978cb9dc17837bbd5c506c5f48080",
-        "DiffID": "sha256:b810f93db04d2c186539d193858a0a1ba200df013b6c94f974af4e43d61ca98e"
+        "Digest": "sha256:c77dac72d0562d6ed1f446396f4a1e95a9b7a60123bc3c67015524b1cfdce06d",
+        "DiffID": "sha256:8e9b73c59d7c8009e8839fdcbb7cab6dec42bab01230fcdcf3b4b6919a78ca9b"
       }
     ]
   },
   "Results": [
     {
-      "Target": "/scan/verified-image.tar (alpine 3.24.3)",
+      "Target": "/scan/review2-image.tar (alpine 3.24.3)",
       "Class": "os-pkgs",
       "Type": "alpine",
       "Packages": [
@@ -2277,8 +2277,8 @@
             "MIT"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/telethon-1.42.0.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2294,8 +2294,8 @@
             "MIT"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/anyio-4.15.1.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2311,8 +2311,8 @@
             "MPL-2.0"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/certifi-2026.10.23.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2328,8 +2328,8 @@
             "MIT"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/fluxclaw-0.1.0.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2345,8 +2345,8 @@
             "MIT"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/h11-0.16.0.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2362,8 +2362,8 @@
             "BSD-3-Clause"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/httpcore-1.0.9.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2379,8 +2379,8 @@
             "BSD-3-Clause"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/httpx-0.28.1.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2396,8 +2396,8 @@
             "BSD-3-Clause"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/idna-3.20.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2413,8 +2413,8 @@
             "MIT"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/pyaes-1.6.1.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2430,8 +2430,8 @@
             "BSD-2-Clause"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/pyasn1-0.6.5.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2447,8 +2447,8 @@
             "Apache-2.0"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/rsa-4.9.1.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"
@@ -2464,8 +2464,8 @@
             "PSF-2.0"
           ],
           "Layer": {
-            "Digest": "sha256:6c697de23ef9b30d9271c7fbe5974bd77fc986bad4d7f6d54569458a46e0f009",
-            "DiffID": "sha256:716104837cbd18be4921250f1e23ea1212f5bf2ab47e0746d70d9d5448122830"
+            "Digest": "sha256:4eab19e50d81277a01706d55a427788718ce5acb2dc6fdbdb8807ab6963089df",
+            "DiffID": "sha256:4b97b29ae99cdb8e89b22fec681bdc499008bf0a4f059665fde28630175411dc"
           },
           "FilePath": "app/.venv/lib/python3.12/site-packages/typing_extensions-4.16.0.dist-info/METADATA",
           "AnalyzedBy": "python-pkg"

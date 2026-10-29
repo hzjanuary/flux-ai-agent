@@ -16,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix="fluxclaw-clean-") as directory:
             ("TELEGRAM_", "OPENROUTER_", "DEFAULT_MODEL", "UV_PROJECT_ENVIRONMENT", "VIRTUAL_ENV")
         )
     }
-    env["UV_PROJECT_ENVIRONMENT", "VIRTUAL_ENV"] = str(temporary / "venv")
+    env["UV_PROJECT_ENVIRONMENT"] = str(temporary / "venv")
     subprocess.run(
         ["uv", "sync", "--locked", "--no-dev", "--no-editable"], cwd=root, env=env, check=True
     )

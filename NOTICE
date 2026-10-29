@@ -1,0 +1,16 @@
+FluxClaw — personal Telegram AI agent
+Repository: https://github.com/hzjanuary/flux-ai-agent
+Project contributions: MIT; see LICENSE and docs/security-baseline.md for review scope.
+
+Design influences credited by the original README:
+- PicoClaw: modular structure.
+- OpenClaw: tool registry and ReAct concepts.
+- SkyClaw / Temm1e: sliding-window conversation summarization concepts.
+No upstream source is knowingly incorporated by this refactor. These credits
+are not a grant of rights over the referenced projects. If provenance concerns
+are found, report them privately before publication.
+
+Third-party dependencies retain their own copyright and license terms.
+Exact production dependency versions, license texts, URLs and metadata are in
+docs/release/third-party-licenses.json; requirements.lock and uv.lock pin artifacts.
+Source-preview review does not authorize image or source publication.

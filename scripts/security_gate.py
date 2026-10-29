@@ -53,6 +53,35 @@ def scan(data: bytes) -> bool:
     return any(re.search(pattern, data) for pattern in PATTERNS)
 
 
+def license_failures(licenses, requirements):
+    def canonical(name):
+        return re.sub(r"[-_.]+", "-", name).lower()
+
+    locked = {
+        canonical(name): version
+        for name, version in re.findall(r"^([a-zA-Z0-9_.-]+)==([^\s;\\]+)", requirements, re.M)
+    }
+    indexed = {canonical(row["Name"]): row for row in licenses}
+    failures = []
+    if len(indexed) != len(licenses) or set(indexed) != set(locked):
+        failures.append(
+            {
+                "path": "docs/release/third-party-licenses.json",
+                "category": "license_inventory_names",
+            }
+        )
+    for name, version in locked.items():
+        row = indexed.get(name)
+        if (
+            row is None
+            or row.get("Version") != version
+            or row.get("License") in (None, "", "UNKNOWN")
+            or row.get("LicenseText") in (None, "", "UNKNOWN")
+        ):
+            failures.append({"path": name, "category": "license_inventory_incomplete_or_stale"})
+    return failures
+
+
 def main() -> int:
     failures: list[dict[str, str]] = []
     files = paths()
@@ -111,20 +140,31 @@ def main() -> int:
             failures.append({"path": name, "category": "required_artifact_missing"})
     if (ROOT / "docs/release/third-party-licenses.json").exists():
         licenses = json.loads((ROOT / "docs/release/third-party-licenses.json").read_text())
-        locked = re.findall(r"^([a-zA-Z0-9-]+)==", (ROOT / "requirements.lock").read_text(), re.M)
+        requirements = (ROOT / "requirements.lock").read_text()
+        failures.extend(license_failures(licenses, requirements))
+        exported = subprocess.check_output(
+            [
+                "uv",
+                "export",
+                "--locked",
+                "--offline",
+                "--no-dev",
+                "--all-extras",
+                "--no-emit-project",
+                "--format",
+                "requirements-txt",
+            ],
+            cwd=ROOT,
+            text=True,
+        )
 
-        def canonical(name):
-            return re.sub(r"[-_.]+", "-", name).lower()
+        def content(text):
+            return [line for line in text.splitlines() if line.strip() and not line.startswith("#")]
 
-        indexed = {canonical(row["Name"]): row for row in licenses}
-        for name in locked:
-            row = indexed.get(canonical(name))
-            if (
-                row is None
-                or row.get("License") in (None, "UNKNOWN")
-                or row.get("LicenseText") in (None, "UNKNOWN")
-            ):
-                failures.append({"path": name, "category": "license_inventory_incomplete"})
+        if content(exported) != content(requirements):
+            failures.append(
+                {"path": "requirements.lock", "category": "production_lock_export_stale"}
+            )
     print(json.dumps({"files_scanned": len(files), "failures": failures}, indent=2))
     return bool(failures)
 

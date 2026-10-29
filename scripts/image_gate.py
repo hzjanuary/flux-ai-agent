@@ -12,8 +12,22 @@ for result in report.get("Results", []):
     for vulnerability in result.get("Vulnerabilities", []):
         counts[vulnerability["Severity"]] += 1
     secrets += len(result.get("Secrets", []))
-if not report.get("Metadata", {}).get("OS") or not any(
-    r.get("Type") == "python-pkg" for r in report.get("Results", [])
+metadata = report.get("Metadata", {})
+os_family = metadata.get("OS", {}).get("Family")
+os_coverage = any(
+    r.get("Class") == "os-pkgs" and r.get("Type") == os_family and r.get("Packages")
+    for r in report.get("Results", [])
+)
+python_coverage = any(
+    r.get("Class") == "lang-pkgs" and r.get("Type") == "python-pkg" and r.get("Packages")
+    for r in report.get("Results", [])
+)
+if (
+    not metadata.get("ImageID")
+    or report.get("ArtifactType") != "container_image"
+    or not os_family
+    or not os_coverage
+    or not python_coverage
 ):
     raise SystemExit("Incomplete OS/Python image scan")
 failed = bool(secrets or counts["HIGH"] or counts["CRITICAL"])

@@ -1,0 +1,12 @@
+**
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!requirements.lock
+!LICENSE
+!NOTICE
+!flux/
+!flux/*.py
+!docs/
+!docs/release/
+!docs/release/third-party-licenses.json

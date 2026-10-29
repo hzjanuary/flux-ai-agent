@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "telegram_installed": false,
+  "openai_installed": false,
+  "provider_generations": 0,
+  "telegram_connections": 0,
+  "socket_tripwire": true,
+  "commands": [
+    "doctor",
+    "config init",
+    "doctor",
+    "tool-list",
+    "memory list",
+    "bot start refused"
+  ]
+}

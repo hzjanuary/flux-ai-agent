@@ -1,0 +1,25 @@
+{
+  "image_id": "sha256:6664713599bd1fc216a545c16990e6646211f74daa28859c9c0aa9a976546d1a",
+  "source_revision": "c4cf3286a8f9fdff145f5bfa8690bc5354b5adca",
+  "init": "Private configuration created; remote inference disabled. Edit it locally, then run flux doctor.",
+  "doctor": "PASS: offline configuration valid; generation calls=0; Telegram connections=0.\nBot not configured; startup remains disabled.",
+  "invalid_bot_refused": true,
+  "write_container": {
+    "uid": 10001,
+    "profile_mode": "0o600",
+    "data_mode": "0o700",
+    "read_only_root": true
+  },
+  "restart_container": {
+    "memory_survives_restart": true,
+    "note_survives_restart": true,
+    "duplicate_claim_refused": true,
+    "integrity": "ok"
+  },
+  "network": "none",
+  "telegram_connections": 0,
+  "provider_generations": 0,
+  "status": "PASS",
+  "cap_drop": "ALL",
+  "no_new_privileges": true
+}

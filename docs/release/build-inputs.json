@@ -1,0 +1,28 @@
+{
+  "source_sha": "c4cf3286a8f9fdff145f5bfa8690bc5354b5adca",
+  "image_source_sha": "c4cf3286a8f9fdff145f5bfa8690bc5354b5adca",
+  "all_image_inputs_identical": true,
+  "sha256": {
+    ".dockerignore": "61896e9924db02767cde066b5d1d680fb9bac673aae380f91ca4f303c6d83d05",
+    "Dockerfile": "6a08b0c905be9883b66658cfc18d60085cc247c5fada678f7909ec0c1eb3dc1b",
+    "LICENSE": "fd904fc3ac6ec01b38639a72764cf40ab04f48673b63885a9fe235c3ab030c74",
+    "NOTICE": "b3c8312132ca8c43ad3a24cfb9053715c2425961292614a5ece3fa8764ef57fa",
+    "docs/release/third-party-licenses.json": "8cf8088ef63a36a8c141ecf0467cbad1cc11a7231f33c7fbf2f7296d454bbfab",
+    "flux/__init__.py": "b044f9a757e5863d5819ac1086f299e6e952e277b4505561b4422878442dc74f",
+    "flux/__main__.py": "31629db4474469342a7e406126b6bfac44fc1a1b5234b7491b645784186f4e14",
+    "flux/cli.py": "e2e21452f5f2e27c1f895858ad91a9f832d974d4973e067a74f86ccdf47b7acf",
+    "flux/config.py": "4a020518d46f8f840816d58a58c504714ae692974a52385adc680a930ab969c0",
+    "flux/core.py": "f63dd54b10fb7c6444823712b91d4991a70eb556b6bdf0df5188d109db2003f6",
+    "flux/errors.py": "a1d7eab163e81b06104c28ae15bfb6cffeba73933048d0f4f167c320b3f25cf0",
+    "flux/fs.py": "ff1f471af32ecb901a29097ece56c7252d1d14cc2d6eafe7840b5bc2c522cf83",
+    "flux/http.py": "16b5194f86f1289b3a1eafd7aeb39a8a0531da054a877bd071cd0f358254d580",
+    "flux/memory.py": "b31081ebe4e2fdf80fd4d34fee34d5de445d0cbc4513d6ae997f44e66573ed6f",
+    "flux/privacy.py": "a2e514e25fe7829f7dd0c5c5f1c70e478d309e56c6b4affed42c5dcda5031745",
+    "flux/provider.py": "d6d7a229fafec59644fed901329cfa98c459142a5068ceb9332a0d8e7467d1de",
+    "flux/telegram.py": "20d180a593df2b64277cdf811edff4f1b939a599f4dbd9a4ca4b98cb18114558",
+    "flux/tools.py": "d06a88d2b31863fdfec207aed59b65bd175b7334ba9cb2acb7c0875efb03df14",
+    "pyproject.toml": "c1b0af16c03de055596924f339c038cf4f9105d61c635a936f79e69c4691b46c",
+    "requirements.lock": "25a9d7036cef7ed565fb058e152935002be2a0d749db13acb0b8daf9b357743c",
+    "uv.lock": "1079e49bea22f129cbb40411ac37d0afbfdebd286c8e4bbd11f22796a7d63143"
+  }
+}

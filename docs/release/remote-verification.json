@@ -1,0 +1,151 @@
+{
+  "source_sha": "a143673c534b2c43f4b89c5e04a99622625a884d",
+  "runs": [
+    {
+      "run_id": 40842064814,
+      "workflow_id": 400337039,
+      "url": "https://github.com/hzjanuary/flux-ai-agent/actions/runs/40842064814",
+      "event": "pull_request",
+      "head_sha": "a143673c534b2c43f4b89c5e04a99622625a884d",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 123340543205,
+          "name": "offline",
+          "conclusion": "success",
+          "evidence_lines": [
+            "252 passed in 3.84s",
+            "No known vulnerabilities found",
+            "no leaks found"
+          ]
+        },
+        {
+          "id": 123340543481,
+          "name": "container",
+          "conclusion": "success",
+          "evidence_lines": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12883630617,
+          "name": "container-security-evidence",
+          "sha256": "sha256:a7744d08496597b807098718f113118ebd0098b7afe88a608c7f2d58cfad9cb1",
+          "validated": true
+        },
+        {
+          "id": 12883535713,
+          "name": "source-security-evidence",
+          "sha256": "sha256:86595418db5e6cc23e43960495136beca4fb23b6ebd1a146c3099f777f546831",
+          "validated": true
+        }
+      ],
+      "image": {
+        "id": "sha256:361d7c2fa7628fa6ed2fc33b256d08b98e24d4bdb392b4754510e27de30e748d",
+        "source_revision": "7fa09a2d8aae7da69e5524cbea773183d911ef2d",
+        "tree_matches_head": true,
+        "container_proof": "PASS",
+        "scan": {
+          "severity_counts": {},
+          "secrets": 0,
+          "status": "PASS",
+          "artifact": "/scan/image.tar",
+          "created_at": "2026-10-29T08:26:18.531609384Z"
+        }
+      },
+      "source_archive": {
+        "source_sha": "7fa09a2d8aae7da69e5524cbea773183d911ef2d",
+        "archive": "fluxclaw-7fa09a2d8aae7da69e5524cbea773183d911ef2d.tar",
+        "sha256": "5da8bae0cf4c6008e7d74cc2ad9fb5ff69a3d40effe90483fa6ac9de03da706d",
+        "members": 96,
+        "private_paths_or_credential_findings": 0,
+        "status": "PASS",
+        "tree_matches_head": true,
+        "all_tracked_file_bytes_and_modes_match_head": true
+      },
+      "dependency_findings": 0,
+      "gitleaks_findings": 0
+    },
+    {
+      "run_id": 40842059971,
+      "workflow_id": 400337039,
+      "url": "https://github.com/hzjanuary/flux-ai-agent/actions/runs/40842059971",
+      "event": "push",
+      "head_sha": "a143673c534b2c43f4b89c5e04a99622625a884d",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 123340528197,
+          "name": "container",
+          "conclusion": "success",
+          "evidence_lines": []
+        },
+        {
+          "id": 123340528507,
+          "name": "offline",
+          "conclusion": "success",
+          "evidence_lines": [
+            "252 passed in 3.86s",
+            "No known vulnerabilities found",
+            "no leaks found"
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 12883411150,
+          "name": "container-security-evidence",
+          "sha256": "sha256:ebe1ba1cc2ca9263fd327c336781b8e8e58d81251d03dd428359f5f64a4d2fec",
+          "validated": true
+        },
+        {
+          "id": 12882644121,
+          "name": "source-security-evidence",
+          "sha256": "sha256:9d4c17474387ce024a053cc89ca735be0fab09c2bce9b6b5bc37e803cf2628f4",
+          "validated": true
+        }
+      ],
+      "image": {
+        "id": "sha256:2f72e271d8b4620e1d7af9d2af54d95bf5b2b38c9eb7c55242b0fdb1609c0f0d",
+        "source_revision": "a143673c534b2c43f4b89c5e04a99622625a884d",
+        "tree_matches_head": true,
+        "container_proof": "PASS",
+        "scan": {
+          "severity_counts": {},
+          "secrets": 0,
+          "status": "PASS",
+          "artifact": "/scan/image.tar",
+          "created_at": "2026-10-29T08:26:17.237077005Z"
+        }
+      },
+      "source_archive": {
+        "source_sha": "a143673c534b2c43f4b89c5e04a99622625a884d",
+        "archive": "fluxclaw-a143673c534b2c43f4b89c5e04a99622625a884d.tar",
+        "sha256": "3d0aed6e3bb347bb9254d4137d91e731f09d02452de1a01fede2145bee5bd02c",
+        "members": 96,
+        "private_paths_or_credential_findings": 0,
+        "status": "PASS",
+        "tree_matches_head": true,
+        "all_tracked_file_bytes_and_modes_match_head": true
+      },
+      "dependency_findings": 0,
+      "gitleaks_findings": 0
+    }
+  ],
+  "initial_failed_runs": [
+    40837677218,
+    40837832607
+  ],
+  "reviewed_ci_defect": "uv 0.9.7 indented # via comments compared as dependencies; fixed without relaxing version/hash/marker comparisons",
+  "first_fixed_green_runs": [
+    40841351858,
+    40841358463
+  ],
+  "real_generation_requests": 0,
+  "real_telegram_connections": 0,
+  "real_telegram_deliveries": 0,
+  "independent_security_signoff": "NOT_GRANTED",
+  "merge_tag_release_image_publication_deployment": "NOT_PERFORMED"
+}

@@ -1,32 +1,24 @@
-# .gitignore for FluxClaw
-
-# Environment secrets — NEVER commit!
 .env
-
-# Telethon session file (contains auth token)
-*.session
-*.session-journal
-
-# Memory persistence file
+.env.*
+!.env.example
+*.session*
 fluxclaw_memory.json
-
-# Log files
+*.sqlite*
+*.db
 *.log
-
-# Notes directory (user data)
 notes/
-
-# Python cache
+.flux/
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual environment
-venv/
+*.py[cod]
 .venv/
+venv/
 env/
-
-# IDE
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
 .vscode/
 .idea/
+artifacts/

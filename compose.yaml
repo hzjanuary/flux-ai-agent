@@ -1,0 +1,21 @@
+services:
+  bot:
+    profiles: [bot]
+    build:
+      context: .
+      args:
+        SOURCE_REVISION: ${SOURCE_REVISION:-unreviewed}
+    command: [bot, start]
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=16m,mode=1777"]
+    volumes: [flux-data:/data]
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 1
+    restart: "no"
+    # No ports; Telegram and configured providers require outbound access.
+volumes:
+  flux-data:

@@ -1,0 +1,19 @@
+title = "FluxClaw reviewed synthetic/public matches only"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Reviewed syntax-only Telegram app hash in two offline fixture files"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = ['^tests/(test_config_cli|test_telegram_adapter)\.py$']
+regexes = ['^0123456789abcdef$']
+
+[[allowlists]]
+description = "Public CPython signing-key fingerprint from official Python base image metadata"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = ['^docs/release/(initial-debian-image-scan|intermediate-alpine-image-scan|image-scan)\.json$']
+regexes = ['^7169605F62C751356D054A26A821E680E5FA6305$']

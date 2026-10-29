@@ -1,0 +1,73 @@
+name: Offline security and source gates
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: '0.9.7'
+      - run: uv sync --locked --all-extras
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run mypy
+      - run: uv run pytest -q
+      - run: uv run python scripts/clean_install.py
+      - run: uv run python scripts/security_gate.py
+      - run: uv run python scripts/history_audit.py
+      - run: |
+          mkdir -p artifacts
+          uv export --locked --all-extras --no-emit-project --format requirements-txt --output-file artifacts/dev-requirements.lock > /dev/null
+          uv run pip-audit --disable-pip --no-deps -r artifacts/dev-requirements.lock --format json --output artifacts/dependency-audit.json
+      - run: |
+          docker run --rm --network none -v "$PWD:/src:ro" -v "$PWD/artifacts:/out" \
+            zricethezav/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f \
+            git /src --config /src/.gitleaks.toml --log-opts=--all --redact=100 --no-banner --report-format json --report-path /out/gitleaks.json
+      - run: uv run python scripts/scanner_canary.py
+      - run: uv run python scripts/source_archive.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: source-security-evidence
+          path: artifacts/
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - run: docker build --build-arg SOURCE_REVISION="$GITHUB_SHA" -t fluxclaw:ci .
+      - run: python scripts/container_smoke.py fluxclaw:ci
+      - run: docker image save fluxclaw:ci --output artifacts/image.tar
+      - run: |
+          docker run --rm -v "$PWD/artifacts:/scan" \
+            aquasec/trivy@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
+            image --input /scan/image.tar --scanners vuln,secret --format json \
+            --output /scan/image-scan.json --exit-code 0 --no-progress
+      - run: python scripts/image_gate.py artifacts/image-scan.json
+      - run: |
+          docker run --rm -v "$PWD/artifacts:/scan" \
+            aquasec/trivy@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
+            image --input /scan/image.tar --format cyclonedx --output /scan/image-sbom.cdx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: container-security-evidence
+          path: |
+            artifacts/container-proof.json
+            artifacts/image-scan.json
+            artifacts/image-sbom.cdx.json

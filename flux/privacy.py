@@ -13,6 +13,14 @@ class Redactor:
             text = text.replace(secret, "[REDACTED]")
         text = re.sub(r"sk-[A-Za-z0-9_-]{8,}", "[REDACTED]", text)
         text = re.sub(r"\b\d{5,}:[A-Za-z0-9_-]{20,}", "[REDACTED]", text)
+        # Mask the whole quoted value, including whitespace and escaped quotes.
+        # Preserve surrounding JSON/Python syntax so redaction cannot corrupt an answer.
+        text = re.sub(
+            r"""(["']?(?:api[_-]?key|token|password|secret)["']?\s*[:=]\s*)(["'])(?:\\.|(?!\2)[^\\])*\2""",
+            lambda match: f"{match[1]}{match[2]}[REDACTED]{match[2]}",
+            text,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
         text = re.sub(
             r"(?i)(api[_-]?key|token|password|secret)\s*[:=]\s*[^\s,;]+", r"\1=[REDACTED]", text
         )

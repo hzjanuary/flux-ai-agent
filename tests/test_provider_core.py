@@ -219,3 +219,21 @@ async def test_ordinary_structured_answers_do_not_become_tool_calls(build, store
     assert len(model.calls) == 1 and agent.metrics["tool_calls"] == 0
     assert store.history(42)[-1] == {"role": "assistant", "content": answer}
     assert store.db.execute("SELECT count(*) FROM approvals").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize(
+    "secret_text",
+    [
+        '{"token": "synthetic phrase with spaces"}',
+        "{'password': 'synthetic phrase with spaces'}",
+        '{"api_key": "synthetic \\"quoted\\" phrase"}',
+    ],
+)
+async def test_quoted_credentials_are_redacted_before_prompt_memory_and_reply(
+    build, store, secret_text
+):
+    dispatcher, model, _, _ = build(secret_text)
+    reply = await dispatcher.handle(Update(42, 42, 1, secret_text))
+    combined = json.dumps(model.calls) + json.dumps(store.history(42)) + reply
+    assert "synthetic" not in combined and "phrase" not in combined
+    assert "[REDACTED]" in reply

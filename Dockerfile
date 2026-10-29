@@ -16,6 +16,8 @@ ENV PATH="/app/.venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HOM
 RUN addgroup -g 10001 flux && adduser -D -u 10001 -G flux -h /home/flux flux && \
     mkdir /data && chown flux:flux /data && chmod 0700 /data /home/flux
 WORKDIR /app
+RUN python -m pip uninstall --yes pip && \
+    python -c "import ensurepip, pathlib, shutil; shutil.rmtree(pathlib.Path(ensurepip.__file__).parent)"
 COPY --from=builder /app/.venv /app/.venv
 COPY LICENSE NOTICE requirements.lock /app/
 COPY docs/release/third-party-licenses.json /app/third-party-licenses.json

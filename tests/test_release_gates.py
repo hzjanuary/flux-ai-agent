@@ -65,3 +65,28 @@ def test_current_license_inventory_matches_exact_production_closure():
         json.loads(Path("docs/release/third-party-licenses.json").read_text()),
         Path("requirements.lock").read_text(),
     )
+
+
+def test_export_annotations_do_not_change_lock_integrity():
+    from scripts.security_gate import requirement_content
+
+    original = (
+        "# exporter header\nfixture==1.0 ; python_version < '3.15' \\\n    --hash=sha256:abc\n"
+    )
+    annotated = original + "    # via\n    #   dependency\n\n"
+    assert requirement_content(original) == requirement_content(annotated)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        "fixture==2.0 ; python_version < '3.15' \\\n    --hash=sha256:abc\n",
+        "fixture==1.0 ; python_version < '3.15' \\\n    --hash=sha256:def\n",
+        "fixture==1.0 ; python_version < '3.14' \\\n    --hash=sha256:abc\n",
+    ],
+)
+def test_actual_dependency_hash_or_marker_changes_still_fail(changed):
+    from scripts.security_gate import requirement_content
+
+    original = "fixture==1.0 ; python_version < '3.15' \\\n    --hash=sha256:abc\n"
+    assert requirement_content(original) != requirement_content(changed)

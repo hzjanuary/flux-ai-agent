@@ -53,6 +53,12 @@ def scan(data: bytes) -> bool:
     return any(re.search(pattern, data) for pattern in PATTERNS)
 
 
+def requirement_content(text):
+    return [
+        line for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
 def license_failures(licenses, requirements):
     def canonical(name):
         return re.sub(r"[-_.]+", "-", name).lower()
@@ -158,10 +164,7 @@ def main() -> int:
             text=True,
         )
 
-        def content(text):
-            return [line for line in text.splitlines() if line.strip() and not line.startswith("#")]
-
-        if content(exported) != content(requirements):
+        if requirement_content(exported) != requirement_content(requirements):
             failures.append(
                 {"path": "requirements.lock", "category": "production_lock_export_stale"}
             )

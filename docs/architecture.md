@@ -1,0 +1,13 @@
+# Architecture
+
+`flux.config` loads an explicit private profile. Imports have no settings singleton, filesystem I/O, Telegram dependency or remote client. CLI initialization/doctor require no keys. `flux.provider.OpenRouter` is instantiated only by an explicit runtime action; only HTTP fixture injection exists for testing.
+
+`flux.telegram.start` validates before importing Telethon or opening its session. One NewMessage handler converts events into `Update`. Sender+chat+private+incoming+non-forwarded checks precede sender lookup; bots are rejected before the shared `Dispatcher`. Every command and normal turn uses the same guard before persistent-state access. The dispatcher serializes one owner turn, refuses a busy queue, claims updates durably, and commits a reply before attempting delivery. Reply chunks are bounded in UTF-16 units and sent as plain text without previews. Retries/replay never re-enter the core. Uncertain delivery is at-most-once, not exactly-once delivery.
+
+`flux.core.Agent` owns direct/optional web/bounded ReAct routing. Direct uses a compact prompt and can request NEED_TOOLS. ReAct accepts one exact JSON envelope per step and rejects unknown/extra/duplicate keys. The central `Registry` validates typed parameters and capabilities before any action. Read-only results return to the model as untrusted user data. Write/network proposals leave the model loop for exact-content approval; `/approve` is a trusted owner command, not a model tool.
+
+Every generation attempt uses a `Budget`, including fallback and opt-in summaries. Successful answers and user input are redacted before storage. Failed generation never becomes a fake assistant success. `metrics` contains path, calls, tool count, elapsed milliseconds and unknown billing, not prompts, IDs or memory content.
+
+`flux.memory.Store` uses SQLite WAL + FULL synchronous commits and schema version 1. Appends, update claims, approvals, receipt records and usage reservations are transactional. The CLI holds a nonblocking OS file lock for a single runtime/maintenance instance; SQLite itself also serializes writers. Tests exercise independent concurrent connections and abrupt uncommitted process exit. Summaries commit only when the selected source is still unchanged and the provider succeeded. They use the shared turn budget, execute asynchronously within the serialized turn, and are never detached background jobs.
+
+Linux descriptor-relative filesystem operations and Linux container behavior are supported. The core is injectable for another adapter, whose caller must supply its own identity gate. This is a personal bot, not a public multi-tenant agent service.

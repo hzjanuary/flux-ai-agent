@@ -1,287 +1,86 @@
-<div align="center">
-
 # FluxClaw
 
-**A personal AI Agent on Telegram — Powered by OpenRouter**
+A self-hosted personal Telegram AI agent for one owner, in Vietnamese or English. A small Python ReAct core, smart direct/web/tool routing, typed tools and durable per-chat SQLite memory; Telethon is a thin optional adapter. Python 3.12+, ordinary CPU, no model download or cloud backend required.
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://python.org)
-[![Telethon](https://img.shields.io/badge/Telethon-1.36%2B-blue?logo=telegram)](https://github.com/LonamiWebs/Telethon)
-[![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-purple)](https://openrouter.ai)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+This branch is a **source preview under review**. Live Telegram/provider behavior and publication approval are separate gates in [verification](docs/release/verification.md). There is no public-user mode or autonomous shell execution.
 
-*Combining the power of **PicoClaw** (modular), **OpenClaw** (tool calling) and **SkyClaw** (Lambda Memory)*
+## Safe local quick start
 
-</div>
-
----
-
-## Introduction
-
-**FluxClaw** is a personal AI Agent running on Telegram, built on the **ReAct (Reasoning + Acting)** architecture. The agent runs as a **Telegram Bot** (via Bot Token from `@BotFather`) and is capable of:
-
-- Conversing naturally in **Vietnamese and English**
-- Automatically **calling tools** (web search, system info, note saving, math, etc.)
-- Using **smart routing** for speed:
-     - **Direct answer** for simple prompts (no tool planning overhead)
-     - **Fast web path** for realtime/news-like questions
-     - **Full ReAct loop** for complex tasks
-- Automatically switching to **fallback models** when the primary model returns `429/404`
-- Tracking **latency metrics** (LLM/tool/total) per chat via `/status latency`
-- Maintaining long-term context via the **Lambda Memory** system (fully async)
-- Supporting **multiple users** with isolated memory per chat
-- **Persisting state** — memory survives bot restarts
-
----
-
-## Architecture
-
-```
-flux/
-├── config.py        — API keys, environment variables, system prompt template
-├── memory.py        — Lambda Memory (async STM + LLM-based summarization)
-├── tools.py         — ToolRegistry + tool implementations
-├── brain.py         — ReAct loop + OpenRouter integration
-├── bot.py           — Telethon event loop (Telegram Bot interface)
-├── .env             — Secret configuration (do NOT commit to git)
-├── .env.example     — Configuration template
-└── requirements.txt — Python dependencies
-```
-
-### Processing Flow (Smart Router + ReAct)
-
-```
-Message from Telegram
-        |
-   [bot.py] receives event → is_authorized() check
-        |
-   [brain.py] brain.think()
-        |
-   Route by intent:
-     - Direct answer (simple prompts)
-     - Fast web path (realtime/news prompts)
-     - Full ReAct loop (complex prompts)
-        |
-   Build prompt: System Prompt + Core Context (LTM) + Short-term history
-        |
-   Call LLM (OpenRouter, with fallback chain on 429/404)
-        |
-   TOOL_CALL? ----> [tools.py] Execute tool ----> Feed result back to LLM
-        |
-   (final plain-text answer)
-   [memory.py] Update STM → async summarization if full
-        |
-   [brain.py] Record latency metrics (LLM/tool/total, path, model)
-        |
-   Send reply to Telegram
-```
-
----
-
-## Lambda Memory System
-
-Memory operates on **2 tiers**, summarization is **fully async** (non-blocking):
-
-| Tier | Name | Description |
-|------|------|-------------|
-| Tier 1 | Short-Term Memory (STM) | Deque holding the last **N messages** (default: 10) |
-| Tier 2 | Core Context (LTM) | LLM-generated summary of older history, injected into every System Prompt |
-
-When STM is full, the **oldest half** is summarized by the LLM (via `AsyncOpenAI`) and merged into Core Context. The **newest half** stays in STM for immediate context.
-
-All memory is saved to `fluxclaw_memory.json` and **persists across restarts**.
-
----
-
-## Built-in Tools
-
-| Tool | Description |
-|------|-------------|
-| `get_system_info()` | CPU, RAM, disk usage, and OS information |
-| `get_current_time()` | Current date and time |
-| `search_web(query, max_results)` | Real web search via DuckDuckGo (title + link + snippet) |
-| `write_note(title, content)` | Save a text note to the `notes/` directory |
-| `read_file(filepath)` | Read file contents (max 50KB) |
-| `run_shell_command(command)` | Run whitelisted safe shell commands |
-| `calculate(expression)` | Evaluate a math expression safely |
-
-> Adding new tools is straightforward — see the guide below.
-
----
-
-## Setup
-
-### Requirements
-
-- Python **3.10+**
-- A Telegram Bot Token from [@BotFather](https://t.me/BotFather)
-- Telegram App credentials from [my.telegram.org](https://my.telegram.org)
-- An API Key from [OpenRouter](https://openrouter.ai/keys)
-
-### Step 1 — Get Telegram App Credentials
-
-1. Go to [https://my.telegram.org/auth](https://my.telegram.org/auth)
-2. Log in and select **"API Development Tools"**
-3. Create an application and save your `api_id` and `api_hash`
-
-> These are required by Telethon regardless of login mode.
-
-### Step 2 — Create a Bot via @BotFather
-
-1. Open Telegram and message [@BotFather](https://t.me/BotFather)
-2. Send `/newbot` and follow the prompts
-3. Copy the **Bot Token** (format: `123456789:AAxxxxxx...`)
-
-### Step 3 — Configure `.env`
+Install [uv](https://docs.astral.sh/uv/), then from this checkout:
 
 ```bash
-copy .env.example .env
+uv sync --locked
+uv run flux doctor
+uv run flux config init
+uv run flux doctor
+uv run flux tool-list
+uv run flux memory list
+uv run pytest -q
 ```
 
-Open `.env` and fill in your details:
+The quick start makes **zero Telegram connections and zero model requests**. Dependency installation downloads Python packages. The private JSON profile defaults to `~/.config/fluxclaw/config.json` (0600); data defaults to `~/.local/share/fluxclaw` (0700). Initialization refuses existing files. Choose isolated paths with `flux --config /absolute/private/config.json config init --data-dir /absolute/private/data`. Commands put `--config` **before** the subcommand. No `.env` is loaded automatically.
 
-```env
-TELEGRAM_API_ID=12345678
-TELEGRAM_API_HASH=your_api_hash_here
+The default profile has no credentials/model, `provider_enabled=false`, no fallback, summaries or web search, and `owner_id=0`. Zero means **startup refused**, never public access. `doctor` checks local settings, not credentials against a remote service; use `doctor --bot` for strict startup readiness.
 
-# Bot Token from @BotFather
-TELEGRAM_BOT_TOKEN=123456789:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+## Provision your private bot explicitly
 
-OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxx
-DEFAULT_MODEL=meta-llama/llama-3.3-70b-instruct:free
-FALLBACK_MODELS=google/gemini-2.0-flash-001,meta-llama/llama-3.1-8b-instruct:free
+Only proceed when you intend to contact Telegram and incur configured provider costs:
 
-# Strongly recommended: set to your Telegram User ID
-TELEGRAM_OWNER_ID=0
-```
+1. Create a bot through Telegram's @BotFather. Obtain your own app API ID/hash from my.telegram.org. Bot-token mode needs both, as described in [Telethon's bot sign-in documentation](https://docs.telethon.dev/en/stable/basic/signing-in.html#signing-in-as-a-bot-account). No userbot, phone-number login or OTP prompt is supported.
+2. Edit the private JSON profile locally: set `owner_id` to your positive numeric Telegram **user** ID; set `telegram_api_id`, `telegram_api_hash`, `telegram_bot_token`, `provider_key`, an explicit `model` in `vendor/model` form, and `provider_enabled=true`. Leave disabled features disabled until needed. Do not put credentials in command history, issue reports, repository files or chat.
+3. Install the adapter and validate offline:
 
-> **Security tip:** Set `TELEGRAM_OWNER_ID` to your Telegram User ID (get it from [@userinfobot](https://t.me/userinfobot)) to prevent others from using your bot and consuming your OpenRouter API quota.
+   ```bash
+   uv sync --locked --extra telegram
+   uv run flux doctor --bot
+   ```
 
-### Step 4 — Install dependencies
+4. Start only when authorized to connect:
+
+   ```bash
+   uv run flux bot start
+   ```
+
+Only incoming, non-forwarded, non-bot **private messages** from the configured sender in that same owner's private chat are accepted. Commands and approvals use the identical guard. Groups and channels are rejected. Messages are deduplicated durably, including after restart. A busy bot asks the owner to retry rather than accumulating an unbounded queue.
+
+## Local provider chat
 
 ```bash
-pip install -r requirements.txt
+uv run flux local chat --allow-remote
 ```
 
-### Step 5 — Run the bot
+This command requires an explicitly configured/enabled provider. It reaches OpenRouter and can cost money. Local conversation uses isolated chat `0`; it does not reuse Telegram memory. There is no fake/demo production provider. Offline test doubles live only in `tests/`.
 
-```bash
-py bot.py
-```
+## Commands and tools
 
-No OTP or phone number required. The bot connects immediately using the Bot Token and starts listening for messages.
+`/start`, `/help`, `/status`, `/status latency`, `/reset`, `/reset confirm`, `/approve TOKEN`. `/reset` first explains its scope; `/reset confirm` clears this chat's messages and summary. Notes, replay protection and receipts remain. Status exposes counts/latency, never conversation previews or identifiers.
 
----
+| Tool | Default | Permission |
+| --- | --- | --- |
+| Current UTC time | enabled | READ_ONLY |
+| AST numeric arithmetic | enabled | READ_ONLY; bounded syntax/depth/magnitude |
+| Notes | enabled with confirmation | WRITE; exact content disclosed, 10-minute owner approval |
+| File read | disabled | READ_ONLY; explicit root, descriptor-relative reads, secret/path/symlink checks |
+| System information | disabled | READ_ONLY; minimal OS/Python versions |
+| Brave web search | disabled | NETWORK; explicit API key, disclosed query and one-use approval |
+| Shell / EXECUTE | removed / forbidden | no execution extension |
 
-## Telegram Commands
+A model tool request cannot approve itself. Web/file content is untrusted data. Search uses a fixed Brave endpoint and never automatically fetches result URLs. Direct routing skips tool instructions; if tools are needed it switches to ReAct within the same budget. Web routing asks for query approval before any search or model generation; approved results return directly to the owner, with sources, without a hidden follow-up model call.
 
-| Command | Description |
-|---------|-------------|
-| `/start` | Welcome message and introduction |
-| `/help` | List all available tools |
-| `/status` | View memory state (STM count + Core Context preview) |
-| `/status latency` | View real-time latency metrics (LLM/tool/total) |
-| `/reset` | Clear all memory for the current chat |
+See [tool policy](docs/tool-policy.md), [architecture](docs/architecture.md), [memory/migration](docs/memory-and-migration.md), [provider controls/costs](docs/providers-and-costs.md), and [self-hosting, Docker, backup and restore](docs/self-hosting.md).
 
----
+## Privacy and limitations
 
-## Performance & Reliability
+Conversation history, summaries, approvals, notes and Telegram sessions are private local data, **not encrypted at rest**. Backups and exports contain conversation data. Configured credentials and common token/password patterns are redacted at inference, transcript and reply boundaries, but no generic redactor can recognize every secret. Do not send secrets to the agent. Grant narrow read roots containing only files you consent to disclose.
 
-### 1) Automatic model fallback
+Self-hosting does not make remote inference local: selected history and tool results can be sent to OpenRouter and its model provider. Brave receives approved search queries. Review their current terms, retention policies and prices yourself. Billing is reported as **unknown**, never zero. Each turn has hard call/tool/output/timeout bounds and a durable daily request ceiling; these are request limits, not a dollar-spend guarantee.
 
-When the primary model fails with `429` (rate limit) or `404` (not found), FluxClaw automatically retries with the next model from `FALLBACK_MODELS`.
+Telegram polling is outbound, with no HTTP listener. The running process still holds powerful credentials and network access; use a separate OS account or the restricted container. Host administrators and same-UID attackers remain trusted. Prompt injection may influence answer text; policy independently prevents unauthorized tools. A model's claim is not an action receipt.
 
-### 2) Latency observability
+Replayed/uncertain updates are never re-executed. A crash or Telegram delivery failure can therefore leave a completed action without a delivered reply. Inspect local receipts/notes rather than rearming an approval. SQLite is single-host storage; use one runtime instance and explicit retention/backup. No guarantee of autonomous task completion is made.
 
-Use `/status latency` to inspect:
+## Contributing and provenance
 
-- Average total latency per turn
-- Average LLM latency and LLM calls/turn
-- Average tool latency and tool calls/turn
-- Last turn details: path, model used, and timing breakdown
+Run `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, `uv run pytest -q`, and `uv run python scripts/security_gate.py`. CI and release gates are documented in [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [release checklist](docs/release/RELEASE-CHECKLIST.md).
 
-### 3) Direct answer mode for simple prompts
-
-For short/simple questions, FluxClaw uses a compact prompt and skips tool planning to reduce token usage and speed up response time.
-
----
-
-## Adding a New Tool
-
-Open `tools.py` and append to the bottom of the file:
-
-```python
-@registry.register(
-    description="Description of what this tool does — the LLM reads this to decide when to use it",
-    params={
-        "param1": {"type": "string", "description": "Description of the parameter"}
-    }
-)
-async def my_tool_name(param1: str) -> str:
-    # Your logic here
-    return f"Result: {param1}"
-```
-
-Done. The tool is **automatically** included in the system prompt and available for the agent to call.
-
----
-
-## Security
-
-| Concern | Mitigation |
-|---------|------------|
-| Unauthorized access | Set `TELEGRAM_OWNER_ID` — bot logs a warning at startup if left as `0` |
-| Bot Token exposure | Never commit `.env` to git (`.gitignore` already covers this) |
-| Session file leakage | `*.session` files hold auth data — do not share or commit |
-| Shell command abuse | `run_shell_command` uses an **allowlist** — only safe read-only commands |
-| Prompt injection via files | `read_file` caps at **50KB** |
-| API errors exposed to users | `brain.py` catches 401/429 and returns friendly Vietnamese+English messages |
-
----
-
-## Environment Variables
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `TELEGRAM_API_ID` | Yes | — | Telegram App ID from my.telegram.org |
-| `TELEGRAM_API_HASH` | Yes | — | Telegram App Hash from my.telegram.org |
-| `TELEGRAM_BOT_TOKEN` | Yes | — | Bot Token from @BotFather |
-| `OPENROUTER_API_KEY` | Yes | — | OpenRouter API Key |
-| `TELEGRAM_PHONE` | No | `""` | Phone number (UserBot mode only, unused by default) |
-| `TELEGRAM_OWNER_ID` | No | `0` (public) | Restrict bot to a single Telegram User ID |
-| `DEFAULT_MODEL` | No | `meta-llama/llama-3.3-70b-instruct:free` | Primary LLM model |
-| `FALLBACK_MODELS` | No | `google/gemini-2.0-flash-001` | Comma-separated fallback models used on 429/404 |
-| `SUMMARIZER_MODEL` | No | `google/gemini-2.0-flash-001` | Memory summarization model |
-| `MAX_TOKENS` | No | `2048` | Maximum response token limit |
-| `SHORT_TERM_LIMIT` | No | `10` | Max messages in short-term memory before summarization |
-| `AGENT_NAME` | No | `FluxClaw` | Agent display name |
-| `SESSION_NAME` | No | `fluxclaw_session` | Telethon session filename |
-
----
-
-## Dependencies
-
-| Library | Purpose |
-|---------|---------|
-| [telethon](https://github.com/LonamiWebs/Telethon) | Telegram Client API (Bot Token mode) |
-| [openai](https://github.com/openai/openai-python) | OpenRouter-compatible async LLM SDK |
-| [python-dotenv](https://github.com/theskumar/python-dotenv) | Load environment variables from `.env` |
-| [psutil](https://github.com/giampaolo/psutil) | System information (CPU, RAM, disk) |
-| [ddgs](https://pypi.org/project/ddgs/) | Web search via DuckDuckGo/Bing backend (runs in thread pool, non-blocking) |
-
----
-
-## Design Influences
-
-| Source Project | Contribution |
-|----------------|-------------|
-| **PicoClaw** | Clean module structure, clear separation of concerns |
-| **OpenClaw** | ToolRegistry pattern, ReAct loop, function calling logic |
-| **SkyClaw (Temm1e)** | Lambda Memory: sliding window + async LLM summarization |
-
----
-
-<div align="center">
-
-Made with care · Powered by [OpenRouter](https://openrouter.ai) · Built with [Telethon](https://github.com/LonamiWebs/Telethon)
-
-</div>
+MIT project contributions: [LICENSE](LICENSE). Design influences from the original README: PicoClaw (modularity), OpenClaw (tool registry/ReAct), SkyClaw/Temm1e (conversation summarization). These are conceptual credits, not copied-source license grants. See [NOTICE](NOTICE), [provenance audit](docs/security-baseline.md) and the [actual production license inventory](docs/release/third-party-licenses.json).

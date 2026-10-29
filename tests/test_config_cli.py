@@ -160,3 +160,29 @@ def test_clean_first_run_in_subprocess_with_network_tripwire(tmp_path):
         == 0
     )
     assert not list(tmp_path.rglob("*.session"))
+
+
+def test_runtime_failure_never_prints_sdk_payload(monkeypatch, capsys):
+    import flux.cli
+
+    monkeypatch.setattr(sys, "argv", ["flux", "doctor"])
+
+    def fail(_):
+        raise RuntimeError("sensitive transport payload must not escape")
+
+    monkeypatch.setattr(flux.cli, "run", fail)
+    assert flux.cli.main() == 2
+    captured = capsys.readouterr()
+    assert "sensitive transport" not in captured.err + captured.out
+    assert "private details withheld" in captured.err
+
+
+def test_config_repr_omits_credentials(settings):
+    value = replace(
+        settings,
+        provider_key="secret-synthetic-value",
+        telegram_bot_token="secret-synthetic-bot",
+        telegram_api_hash="secret-synthetic-hash",
+        web_key="secret-synthetic-web",
+    )
+    assert "secret-synthetic" not in repr(value)

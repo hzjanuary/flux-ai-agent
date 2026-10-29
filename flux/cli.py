@@ -196,6 +196,10 @@ def main() -> int:
         return 2
     except KeyboardInterrupt:
         return 130
+    except Exception:
+        # Transport/SQLite/SDK exceptions may embed private payloads or request objects.
+        print("FAIL: runtime operation failed; private details withheld.", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

@@ -31,3 +31,7 @@ Planning baseline: main `0eb150a8b5cca3db96bb62f5462a82a25d2ccba1`; SPEC-001 is 
 - Summarizer LLM calls cost budget; do not silently discard messages on failed summarization.
 - Keep raw source/image scanner findings and no unreviewed exceptions. Preserve legacy data untouched.
 - No source push, Telegram login or hosted inference without explicit owner authorization.
+
+## Implementation update — 2026-10-29
+
+The proposal above is retained as planning history. Local F0–F5 engineering is now implemented on feat/spec-001-oss-fluxclaw; see docs/release/verification.md for 203 offline tests, actual private container restart proof, full clean image/dependency/secret scans and source provenance. Replaced historical risks rather than wrapping the unsafe runtime. Source and image remain unpublished. The active plan is docs/plans/implementation.md; live Telegram/provider verification, remote CI, independent release/security review and operator publication approval remain open.

@@ -1,0 +1,51 @@
+{
+  "source_sha": "34f0eb53cba518a9e2043d6103d7f5a885c0dbb1",
+  "utc": "2026-10-29T06:58:50.953701+00:00",
+  "live_provider_generations": 0,
+  "live_telegram_connections": 0,
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "format",
+        "--check",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "32 files already formatted"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "mypy"
+      ],
+      "exit_code": 0,
+      "output": "Success: no issues found in 12 source files"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "........................................................................ [ 35%]\n........................................................................ [ 70%]\n...........................................................              [100%]\n203 passed in 5.07s"
+    }
+  ],
+  "status": "PASS"
+}

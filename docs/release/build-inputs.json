@@ -1,0 +1,26 @@
+{
+  "source_sha": "34f0eb53cba518a9e2043d6103d7f5a885c0dbb1",
+  "image_source_sha": "4d883d93d45dec5765a7499e6db8b75cf7de92f1",
+  "all_image_inputs_identical": true,
+  "sha256": {
+    "Dockerfile": "6a08b0c905be9883b66658cfc18d60085cc247c5fada678f7909ec0c1eb3dc1b",
+    "LICENSE": "fd904fc3ac6ec01b38639a72764cf40ab04f48673b63885a9fe235c3ab030c74",
+    "NOTICE": "b3c8312132ca8c43ad3a24cfb9053715c2425961292614a5ece3fa8764ef57fa",
+    "docs/release/third-party-licenses.json": "8cf8088ef63a36a8c141ecf0467cbad1cc11a7231f33c7fbf2f7296d454bbfab",
+    "flux/__init__.py": "b044f9a757e5863d5819ac1086f299e6e952e277b4505561b4422878442dc74f",
+    "flux/__main__.py": "31629db4474469342a7e406126b6bfac44fc1a1b5234b7491b645784186f4e14",
+    "flux/cli.py": "e2e21452f5f2e27c1f895858ad91a9f832d974d4973e067a74f86ccdf47b7acf",
+    "flux/config.py": "4a020518d46f8f840816d58a58c504714ae692974a52385adc680a930ab969c0",
+    "flux/core.py": "1b71d942a3dd431afedddad5746cb4e3cfa8140d5bf67def1a3559e00fa2187a",
+    "flux/errors.py": "a1d7eab163e81b06104c28ae15bfb6cffeba73933048d0f4f167c320b3f25cf0",
+    "flux/fs.py": "8f702cd22db002aed99e9721d17f44701746930b0a5a7d3a5ec235ec32866336",
+    "flux/memory.py": "b31081ebe4e2fdf80fd4d34fee34d5de445d0cbc4513d6ae997f44e66573ed6f",
+    "flux/privacy.py": "324ffbd2a945e6f22d56c170e93bbff4ecb6b7fb6299ae12dd278ffb8684f866",
+    "flux/provider.py": "349e0d4536829ecb57d1f1b6bb1e9a43b892e34918155b8475496799174d0b1f",
+    "flux/telegram.py": "20d180a593df2b64277cdf811edff4f1b939a599f4dbd9a4ca4b98cb18114558",
+    "flux/tools.py": "93568002c8ef0829a221533878aac3938fa02c580e610fd941abf09d59417cbf",
+    "pyproject.toml": "c1b0af16c03de055596924f339c038cf4f9105d61c635a936f79e69c4691b46c",
+    "requirements.lock": "25a9d7036cef7ed565fb058e152935002be2a0d749db13acb0b8daf9b357743c",
+    "uv.lock": "1079e49bea22f129cbb40411ac37d0afbfdebd286c8e4bbd11f22796a7d63143"
+  }
+}

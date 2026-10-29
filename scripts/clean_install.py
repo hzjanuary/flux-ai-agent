@@ -12,7 +12,9 @@ with tempfile.TemporaryDirectory(prefix="fluxclaw-clean-") as directory:
     env = {
         k: v
         for k, v in os.environ.items()
-        if not k.startswith(("TELEGRAM_", "OPENROUTER_", "DEFAULT_MODEL", "UV_PROJECT_ENVIRONMENT", "VIRTUAL_ENV"))
+        if not k.startswith(
+            ("TELEGRAM_", "OPENROUTER_", "DEFAULT_MODEL", "UV_PROJECT_ENVIRONMENT", "VIRTUAL_ENV")
+        )
     }
     env["UV_PROJECT_ENVIRONMENT", "VIRTUAL_ENV"] = str(temporary / "venv")
     subprocess.run(

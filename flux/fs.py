@@ -12,7 +12,8 @@ def no_symlinks(path: Path) -> Path:
     for part in (path, *path.parents):
         if part.is_symlink():
             raise Denied("symlink_path")
-    return path
+    # Preserve the symlink check on the original spelling before normalizing '..'.
+    return path.resolve(strict=False)
 
 
 def private_dir(path: Path) -> Path:

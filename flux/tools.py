@@ -21,6 +21,7 @@ from typing import Any, cast
 from flux.config import Settings
 from flux.errors import Denied, InvalidCall
 from flux.fs import fsync_dir, no_symlinks, private_dir
+from flux.http import bounded_json
 from flux.memory import Store
 
 
@@ -221,8 +222,14 @@ class Registry:
         ):
             raise Denied("sensitive_file")
         root = no_symlinks(Path(self.settings.read_root))
+        if any(
+            part.lower() in {".ssh", ".aws", ".gnupg", ".config", ".git"}
+            or part.lower().startswith(".env")
+            for part in root.parts
+        ):
+            raise Denied("sensitive_file")
         target = root / path
-        data_root = Path(self.settings.data_dir).absolute()
+        data_root = no_symlinks(Path(self.settings.data_dir))
         if target.is_relative_to(data_root) or root.is_relative_to(data_root):
             raise Denied("private_storage")
         fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
@@ -280,16 +287,15 @@ class Registry:
                     "GET",
                     "https://api.search.brave.com/res/v1/web/search",
                     params={"q": args["query"], "count": args["max_results"]},
-                    headers={"X-Subscription-Token": self.settings.web_key},
+                    headers={
+                        "X-Subscription-Token": self.settings.web_key,
+                        "Accept-Encoding": "identity",
+                    },
                 ) as response:
                     if response.status_code != 200:
                         raise Denied("search_failed")
-                    payload = bytearray()
-                    async for chunk in response.aiter_bytes():
-                        payload.extend(chunk)
-                        if len(payload) > 1000000:
-                            raise Denied("search_failed")
-                rows = json.loads(payload).get("web", {}).get("results", [])[: args["max_results"]]
+                    payload = await bounded_json(response)
+                rows = payload.get("web", {}).get("results", [])[: args["max_results"]]
                 results = [
                     {
                         "title": str(row.get("title", ""))[:200],

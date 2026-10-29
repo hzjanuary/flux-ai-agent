@@ -1,7 +1,6 @@
 """Real OpenRouter adapter; no client construction or traffic during import/doctor."""
 
 import asyncio
-import json
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -9,6 +8,7 @@ import httpx
 
 from flux.config import Settings
 from flux.errors import BudgetExceeded, ProviderError
+from flux.http import bounded_json
 from flux.memory import Store
 
 
@@ -62,7 +62,10 @@ class OpenRouter:
                 async with client.stream(
                     "POST",
                     "https://openrouter.ai/api/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {self.settings.provider_key}"},
+                    headers={
+                        "Authorization": f"Bearer {self.settings.provider_key}",
+                        "Accept-Encoding": "identity",
+                    },
                     json={
                         "model": model,
                         "messages": messages,
@@ -73,12 +76,7 @@ class OpenRouter:
                 ) as response:
                     if response.status_code != 200:
                         raise classify(response.status_code)
-                    payload = bytearray()
-                    async for chunk in response.aiter_bytes():
-                        payload.extend(chunk)
-                        if len(payload) > 1000000:
-                            raise ProviderError("invalid_output")
-            data = json.loads(payload)
+                    data = await bounded_json(response)
             if "error" in data:
                 status = data["error"].get("code")
                 raise (

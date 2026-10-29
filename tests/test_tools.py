@@ -274,3 +274,34 @@ async def test_search_redirect_errors_and_oversize_are_rejected(
     tools = Registry(replace(settings, web_enabled=True, web_key="synthetic-web-key"), store)
     with pytest.raises(Denied):
         await tools._search({"query": "fixture", "max_results": 1})
+
+
+@pytest.mark.parametrize("which", ["read_root", "data_dir"])
+async def test_private_data_exclusion_normalizes_parent_components(
+    settings, store, tmp_path, which
+):
+    data = Path(settings.data_dir)
+    (data / "record.txt").write_text("synthetic owner-only note")
+    alias_parent = tmp_path / "alias_parent"
+    alias_parent.mkdir()
+    if which == "read_root":
+        config = replace(settings, read_root=str(alias_parent / ".." / "data"))
+        relative = "record.txt"
+    else:
+        config = replace(
+            settings, read_root=str(tmp_path), data_dir=str(alias_parent / ".." / "data")
+        )
+        relative = "data/record.txt"
+    with pytest.raises(Denied, match="private_storage"):
+        await Registry(config, store).execute(42, "read_file", {"filepath": relative}, "1")
+
+
+@pytest.mark.parametrize("directory", [".ssh", ".aws", ".gnupg", ".config", ".git"])
+async def test_sensitive_read_root_cannot_hide_ancestor_name(settings, store, tmp_path, directory):
+    root = tmp_path / directory / "nested"
+    root.mkdir(parents=True)
+    (root / "record.txt").write_text("synthetic sensitive record")
+    with pytest.raises(Denied, match="sensitive_file"):
+        await Registry(replace(settings, read_root=str(root)), store).execute(
+            42, "read_file", {"filepath": "record.txt"}, "1"
+        )
